@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Country {
+  id        String     @id @db.Char(2)
+  name      String?    @db.VarChar(40)
+  regionId  Int        @db.UnsignedInt
+  region    Region     @relation(fields: [regionId], references: [id], onUpdate: Restrict)
+  locations Location[]
+
+  @@index([regionId], map: "regionId")
+}
+
+model Department {
+  id           Int          @id @db.UnsignedInt
+  name         String       @db.VarChar(30)
+  managerId    Int?         @db.UnsignedInt
+  locationId   Int?         @db.UnsignedInt
+  location     Location?    @relation(fields: [locationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  manager      Employee?    @relation("department_manager_idToemployee", fields: [managerId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  employees    Employee[]   @relation("employee_department_idTodepartment")
+  jobHistories JobHistory[]
+
+  @@index([locationId], map: "locationId")
+  @@index([managerId], map: "managerId")
+}
+
+model Employee {
+  id             Int          @id @db.UnsignedInt
+  firstName      String?      @db.VarChar(20)
+  lastName       String       @db.VarChar(20)
+  email          String       @db.VarChar(40)
+  phone          String?      @db.VarChar(20)
+  hiredAt        DateTime     @db.Date
+  jobId          String       @db.VarChar(10)
+  salary         Decimal      @db.Decimal(8, 2)
+  commissionPct  Decimal?     @db.Decimal(2, 2)
+  managerId      Int?         @db.UnsignedInt
+  departmentId   Int?         @db.UnsignedInt
+  departments    Department[] @relation("department_manager_idToemployee")
+  job            Job          @relation(fields: [jobId], references: [id], onUpdate: Restrict)
+  department     Department?  @relation("employee_department_idTodepartment", fields: [departmentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  employee       Employee?    @relation("employeesToemployees", fields: [managerId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  otherEmployees Employee[]   @relation("employeesToemployees")
+  jobHistories   JobHistory[]
+
+  @@unique([email], map: "email")
+  @@index([departmentId], map: "departmentId")
+  @@index([jobId], map: "jobId")
+  @@index([managerId], map: "managerId")
+}
+
+model JobHistory {
+  employeeId   Int        @db.UnsignedInt
+  startedAt    DateTime   @db.Date
+  endedAt      DateTime   @db.Date
+  jobId        String     @db.VarChar(10)
+  departmentId Int        @db.UnsignedInt
+  employee     Employee   @relation(fields: [employeeId], references: [id], onUpdate: Restrict)
+  job          Job        @relation(fields: [jobId], references: [id], onUpdate: Restrict)
+  department   Department @relation(fields: [departmentId], references: [id], onUpdate: Restrict)
+
+  @@unique([employeeId, startedAt], map: "employeeId")
+  @@index([departmentId], map: "departmentId")
+  @@index([jobId], map: "jobId")
+}
+
+model Job {
+  id           String       @id @db.VarChar(10)
+  title        String       @db.VarChar(35)
+  minSalary    Decimal?     @db.Decimal(8, 0)
+  maxSalary    Decimal?     @db.Decimal(8, 0)
+  employees    Employee[]
+  jobHistories JobHistory[]
+}
+
+model Location {
+  id            Int          @id @default(autoincrement()) @db.UnsignedInt
+  streetAddress String?      @db.VarChar(40)
+  postalCode    String?      @db.VarChar(12)
+  city          String       @db.VarChar(30)
+  stateProvince String?      @db.VarChar(25)
+  countryId     String       @db.Char(2)
+  departments   Department[]
+  country       Country      @relation(fields: [countryId], references: [id], onUpdate: Restrict)
+
+  @@index([countryId], map: "countryId")
+}
+
+model Region {
+  id        Int       @id @db.UnsignedInt
+  name      String?   @db.VarChar(25)
+  countries Country[]
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  bio    String
+  userId Int    @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  email     String   @unique @db.VarChar(80)
+  name      String?  @db.VarChar(60)
+  password  String   @db.VarChar(60)
+  role      Role     @default(USER)
+  profile   Profile?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
