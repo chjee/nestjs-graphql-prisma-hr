@@ -1,12 +1,24 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { RegionsService } from './regions.service';
 import { Region } from './entities/region.entity';
 import { CreateRegionInput } from './dto/create-region.input';
 import { UpdateRegionInput } from './dto/update-region.input';
+import { CountriesService } from '../countries/countries.service';
 
 @Resolver(() => Region)
 export class RegionsResolver {
-  constructor(private readonly regionsService: RegionsService) {}
+  constructor(
+    private readonly regionsService: RegionsService,
+    private readonly countriesService: CountriesService,
+  ) {}
 
   @Mutation(() => Region)
   async createRegion(
@@ -29,6 +41,11 @@ export class RegionsResolver {
   @Query(() => Region, { name: 'getRegionById' })
   async findOne(@Args('id', { type: () => Int }) id: number): Promise<Region> {
     return this.regionsService.findOne({ id: id });
+  }
+
+  @ResolveField()
+  async countries(@Parent() { id }: Region) {
+    return this.countriesService.findAll({ where: { regionId: id } });
   }
 
   @Mutation(() => Region)
