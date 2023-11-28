@@ -16,5 +16,5 @@ export class Region {
   name: string;
 
   @Field(() => [Country], { description: 'Country name' })
-  countries?: Country[];
+  countries?: Country[] | null;
 }
