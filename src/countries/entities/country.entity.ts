@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Region } from 'src/regions/entities/region.entity';
+import { Region } from './../../regions/entities/region.entity';
 
 @ObjectType({ description: 'Country object' })
 export class Country {
