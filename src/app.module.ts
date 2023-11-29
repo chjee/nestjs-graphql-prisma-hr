@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { RegionsModule } from './regions/regions.module';
 import { CountriesModule } from './countries/countries.module';
+import { LocationsModule } from './locations/locations.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CountriesModule } from './countries/countries.module';
     PrismaModule,
     RegionsModule,
     CountriesModule,
+    LocationsModule,
   ],
   providers: [],
 })
