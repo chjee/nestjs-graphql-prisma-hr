@@ -12,6 +12,7 @@ import { Region } from './entities/region.entity';
 import { CreateRegionInput } from './dto/create-region.input';
 import { UpdateRegionInput } from './dto/update-region.input';
 import { CountriesService } from '../countries/countries.service';
+import { Country } from '../countries/entities/country.entity';
 
 @Resolver(() => Region)
 export class RegionsResolver {
@@ -44,7 +45,7 @@ export class RegionsResolver {
   }
 
   @ResolveField()
-  async countries(@Parent() { id }: Region) {
+  async countries(@Parent() { id }: Region): Promise<Country[]> {
     return this.countriesService.findAll({ where: { regionId: id } });
   }
 
