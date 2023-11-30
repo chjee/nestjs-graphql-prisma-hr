@@ -20,10 +20,11 @@ export class Location {
   @Length(3, 12)
   postalCode?: string;
 
-  @Field(() => String, { nullable: true, description: 'City' })
+  @Field(() => String, { description: 'City' })
+  @IsNotEmpty()
   @IsString()
   @Length(3, 30)
-  city?: string;
+  city: string;
 
   @Field(() => String, { nullable: true, description: 'State province' })
   @IsString()
@@ -31,11 +32,12 @@ export class Location {
   stateProvince?: string;
 
   @Field(() => String, { description: 'Country ID' })
+  @IsNotEmpty()
   @IsString()
   @Length(2, 2)
   countryId: string;
 
-  @Field(() => Country, { description: 'Country object' })
+  @Field(() => Country, { nullable: true, description: 'Country object' })
   country?: Country;
 
   // @Field(() => [Department], { description: 'Department object' })
