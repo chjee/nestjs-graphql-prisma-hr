@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RegionsResolver } from './regions.resolver';
 import { RegionsService } from './regions.service';
-import { Region } from './entities/region.entity';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRegionInput } from './dto/create-region.input';
 import { UpdateRegionInput } from './dto/update-region.input';
 import { CountriesService } from '../countries/countries.service';
-import { Country } from '../countries/entities/country.entity';
+import { Region, Country } from '@prisma/client';
 
 describe('RegionsResolver', () => {
   let regionsResolver: RegionsResolver;
