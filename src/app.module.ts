@@ -6,6 +6,9 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { RegionsModule } from './regions/regions.module';
 import { CountriesModule } from './countries/countries.module';
 import { LocationsModule } from './locations/locations.module';
+import { JobsModule } from './jobs/jobs.module';
+import { UsersModule } from './users/users.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { LocationsModule } from './locations/locations.module';
     RegionsModule,
     CountriesModule,
     LocationsModule,
+    JobsModule,
+    UsersModule,
+    ProfilesModule,
   ],
   providers: [],
 })
