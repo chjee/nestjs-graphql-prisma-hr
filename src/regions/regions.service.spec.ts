@@ -6,7 +6,7 @@ import { CreateRegionInput } from './dto/create-region.input';
 import { UpdateRegionInput } from './dto/update-region.input';
 
 describe('RegionsService', () => {
-  let service: RegionsService;
+  let regionsService: RegionsService;
 
   const region: Region = {
     id: 5,
@@ -25,7 +25,7 @@ describe('RegionsService', () => {
       providers: [PrismaService, RegionsService],
     }).compile();
 
-    service = moduleRef.get<RegionsService>(RegionsService);
+    regionsService = moduleRef.get<RegionsService>(RegionsService);
   });
 
   describe('create', () => {
@@ -34,23 +34,28 @@ describe('RegionsService', () => {
         id: 5,
         name: 'Antarctica',
       };
-      jest.spyOn(service, 'create').mockImplementation(async () => region);
-      expect(await service.create(createRegionInput)).toBe(region);
+      jest
+        .spyOn(regionsService, 'create')
+        .mockImplementation(async () => region);
+      expect(await regionsService.create(createRegionInput)).toBe(region);
     });
   });
 
   describe('findAll', () => {
     it('should return an array of regions', async () => {
-      jest.spyOn(service, 'findAll').mockImplementation(async () => regions);
-      expect(await service.findAll({ skip: 0, take: 3 })).toBe(regions);
+      jest
+        .spyOn(regionsService, 'findAll')
+        .mockImplementation(async () => regions);
+      expect(await regionsService.findAll({ skip: 0, take: 3 })).toBe(regions);
     });
   });
 
   describe('findOne', () => {
     it('should return a region by id', async () => {
-      const result: Region = region;
-      jest.spyOn(service, 'findOne').mockImplementation(async () => region);
-      expect(await service.findOne({ id: 5 })).toBe(result);
+      jest
+        .spyOn(regionsService, 'findOne')
+        .mockImplementation(async () => region);
+      expect(await regionsService.findOne({ id: 5 })).toBe(region);
     });
   });
 
@@ -59,17 +64,24 @@ describe('RegionsService', () => {
       const updateRegionInput: UpdateRegionInput = {
         name: 'Antarctic Continent',
       };
-      jest.spyOn(service, 'update').mockImplementation(async () => region);
+      jest
+        .spyOn(regionsService, 'update')
+        .mockImplementation(async () => region);
       expect(
-        await service.update({ where: { id: 5 }, data: updateRegionInput }),
+        await regionsService.update({
+          where: { id: 5 },
+          data: updateRegionInput,
+        }),
       ).toBe(region);
     });
   });
 
   describe('remove', () => {
     it('should delete a region by id', async () => {
-      jest.spyOn(service, 'remove').mockImplementation(async () => region);
-      expect(await service.remove({ id: 5 })).toBe(region);
+      jest
+        .spyOn(regionsService, 'remove')
+        .mockImplementation(async () => region);
+      expect(await regionsService.remove({ id: 5 })).toBe(region);
     });
   });
 });
