@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 @InputType({ description: 'Create location input' })
 export class CreateLocationInput {
@@ -13,7 +13,8 @@ export class CreateLocationInput {
   @Length(3, 12)
   postalCode: string;
 
-  @Field(() => String, { nullable: true, description: 'City' })
+  @Field(() => String, { description: 'City' })
+  @IsNotEmpty()
   @IsString()
   @Length(3, 30)
   city: string;
@@ -24,6 +25,7 @@ export class CreateLocationInput {
   stateProvince: string;
 
   @Field(() => String, { description: 'Country ID' })
+  @IsNotEmpty()
   @IsString()
   @Length(2, 2)
   countryId: string;
