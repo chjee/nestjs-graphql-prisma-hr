@@ -15,6 +15,6 @@ export class Region {
   @Length(3, 25)
   name: string;
 
-  @Field(() => [Country], { description: 'Country name' })
+  @Field(() => [Country], { nullable: true, description: 'Country name' })
   countries?: Country[] | null;
 }
