@@ -46,7 +46,7 @@ model Employee {
   departments    Department[] @relation("department_manager_idToemployee")
   job            Job          @relation(fields: [jobId], references: [id], onUpdate: Restrict)
   department     Department?  @relation("employee_department_idTodepartment", fields: [departmentId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  employee       Employee?    @relation("employeesToemployees", fields: [managerId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  manager        Employee?    @relation("employeesToemployees", fields: [managerId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   otherEmployees Employee[]   @relation("employeesToemployees")
   jobHistories   JobHistory[]
 
