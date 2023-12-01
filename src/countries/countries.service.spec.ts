@@ -1,26 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CountriesService } from './countries.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { Country } from '@prisma/client';
+import { country, countries } from '../common/constants/hr.constants';
 import { CreateCountryInput } from './dto/create-country.input';
 import { UpdateCountryInput } from './dto/update-country.input';
 
 describe('CountriesService', () => {
   let countriesService: CountriesService;
-
-  const country: Country = {
-    id: 'KR',
-    name: 'Republic of Korea',
-    regionId: 3,
-  };
-
-  const countries: Country[] = [
-    {
-      id: 'KR',
-      name: 'Republic of Korea',
-      regionId: 3,
-    },
-  ];
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({

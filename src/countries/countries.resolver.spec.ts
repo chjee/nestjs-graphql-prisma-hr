@@ -3,33 +3,21 @@ import { CountriesResolver } from './countries.resolver';
 import { CountriesService } from './countries.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegionsService } from '../regions/regions.service';
+import { LocationsService } from '../locations/locations.service';
+import {
+  country,
+  countries,
+  region,
+  locations,
+} from '../common/constants/hr.constants';
 import { CreateCountryInput } from './dto/create-country.input';
 import { UpdateCountryInput } from './dto/update-country.input';
-import { Region, Country } from '@prisma/client';
 
 describe('CountriesResolver', () => {
   let countriesResolver: CountriesResolver;
   let countriesService: CountriesService;
   let regionsService: RegionsService;
-
-  const country: Country = {
-    id: 'KR',
-    name: 'Republic of Korea',
-    regionId: 3,
-  };
-
-  const countries: Country[] = [
-    {
-      id: 'KR',
-      name: 'Republic of Korea',
-      regionId: 3,
-    },
-  ];
-
-  const region: Region = {
-    id: 5,
-    name: 'Antarctica',
-  };
+  let locationsService: LocationsService;
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -38,12 +26,14 @@ describe('CountriesResolver', () => {
         CountriesResolver,
         CountriesService,
         RegionsService,
+        LocationsService,
       ],
     }).compile();
 
     countriesResolver = moduleRef.get<CountriesResolver>(CountriesResolver);
     countriesService = moduleRef.get<CountriesService>(CountriesService);
     regionsService = moduleRef.get<RegionsService>(RegionsService);
+    locationsService = moduleRef.get<LocationsService>(LocationsService);
   });
 
   describe('create', () => {
@@ -101,6 +91,15 @@ describe('CountriesResolver', () => {
         .spyOn(regionsService, 'findOne')
         .mockImplementation(async () => region);
       expect(await countriesResolver.region(country)).toBe(region);
+    });
+  });
+
+  describe('locations', () => {
+    it('should return locations by country id', async () => {
+      jest
+        .spyOn(locationsService, 'findAll')
+        .mockImplementation(async () => locations);
+      expect(await countriesResolver.locations(country)).toBe(locations);
     });
   });
 
