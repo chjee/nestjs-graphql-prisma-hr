@@ -2,38 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProfilesResolver } from './profiles.resolver';
 import { ProfilesService } from './profiles.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { Profile, User } from '@prisma/client';
-import { CreateProfileInput } from './dto/create-profile.input';
-import { UpdateProfileInput } from './dto/update-profile.input';
 import { UsersService } from '../users/users.service';
+import {
+  profile,
+  profiles,
+  createProfileInput,
+  updateProfileInput,
+  user,
+} from '../common/constants/jest.constants';
 
 describe('ProfilesResolver', () => {
   let profilesResolver: ProfilesResolver;
   let profilesService: ProfilesService;
   let usersService: UsersService;
-
-  const profile: Profile = {
-    id: 1,
-    bio: 'Happy',
-    userId: 1,
-  };
-
-  const profiles: Profile[] = [
-    {
-      id: 1,
-      bio: 'Happy',
-      userId: 1,
-    },
-  ];
-
-  const user: User = {
-    id: 1,
-    createdAt: new Date(),
-    email: 'andrew@prisma.io',
-    name: 'Andrew',
-    password: 'whoami',
-    role: 'ADMIN',
-  };
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -52,10 +33,6 @@ describe('ProfilesResolver', () => {
 
   describe('create', () => {
     it('should return a profile', async () => {
-      const createProfileInput: CreateProfileInput = {
-        bio: 'Happy',
-        userId: 1,
-      };
       jest
         .spyOn(profilesService, 'create')
         .mockImplementation(async () => profile);
@@ -92,9 +69,6 @@ describe('ProfilesResolver', () => {
 
   describe('update', () => {
     it('should return an updated profile', async () => {
-      const updateProfileInput: UpdateProfileInput = {
-        bio: 'Soso',
-      };
       jest
         .spyOn(profilesService, 'update')
         .mockImplementation(async () => profile);

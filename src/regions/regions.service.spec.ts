@@ -1,24 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RegionsService } from './regions.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { Region } from '@prisma/client';
-import { CreateRegionInput } from './dto/create-region.input';
-import { UpdateRegionInput } from './dto/update-region.input';
+import {
+  region,
+  regions,
+  createRegionInput,
+  updateRegionInput,
+} from '../common/constants/jest.constants';
 
 describe('RegionsService', () => {
   let regionsService: RegionsService;
-
-  const region: Region = {
-    id: 5,
-    name: 'Antarctica',
-  };
-
-  const regions: Region[] = [
-    {
-      id: 5,
-      name: 'Antarctica',
-    },
-  ];
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -30,10 +21,6 @@ describe('RegionsService', () => {
 
   describe('create', () => {
     it('should create a region', async () => {
-      const createRegionInput: CreateRegionInput = {
-        id: 5,
-        name: 'Antarctica',
-      };
       jest
         .spyOn(regionsService, 'create')
         .mockImplementation(async () => region);
@@ -61,9 +48,6 @@ describe('RegionsService', () => {
 
   describe('update', () => {
     it('should update a region by id', async () => {
-      const updateRegionInput: UpdateRegionInput = {
-        name: 'Antarctic Continent',
-      };
       jest
         .spyOn(regionsService, 'update')
         .mockImplementation(async () => region);

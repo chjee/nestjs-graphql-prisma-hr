@@ -1,32 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LocationsService } from './locations.service';
-import { Location } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateLocationInput } from './dto/create-location.input';
-import { UpdateLocationInput } from './dto/update-location.input';
+import {
+  location,
+  locations,
+  createLocationInput,
+  updateLocationInput,
+} from '../common/constants/jest.constants';
 
 describe('LocationsService', () => {
   let locationsService: LocationsService;
-
-  const location: Location = {
-    id: 1100,
-    streetAddress: '93091 Calle della Testa',
-    postalCode: '10934',
-    city: 'Venice',
-    stateProvince: 'Venice',
-    countryId: 'IT',
-  };
-
-  const locations: Location[] = [
-    {
-      id: 1100,
-      streetAddress: '93091 Calle della Testa',
-      postalCode: '10934',
-      city: 'Venice',
-      stateProvince: 'Venice',
-      countryId: 'IT',
-    },
-  ];
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -38,13 +21,6 @@ describe('LocationsService', () => {
 
   describe('create', () => {
     it('should create a location', async () => {
-      const createLocationInput: CreateLocationInput = {
-        streetAddress: '93091 Calle della Testa',
-        postalCode: '10934',
-        city: 'Venice',
-        stateProvince: 'Venice',
-        countryId: 'IT',
-      };
       jest
         .spyOn(locationsService, 'create')
         .mockImplementation(async () => location);
@@ -74,13 +50,6 @@ describe('LocationsService', () => {
 
   describe('update', () => {
     it('should update a location', async () => {
-      const updateLocationInput: UpdateLocationInput = {
-        streetAddress: '93091 Calle della Testa',
-        postalCode: '10934',
-        city: 'Venice',
-        stateProvince: 'Venice',
-        countryId: 'IT',
-      };
       jest
         .spyOn(locationsService, 'update')
         .mockImplementation(async () => location);

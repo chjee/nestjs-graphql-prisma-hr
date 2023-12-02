@@ -3,42 +3,18 @@ import { PrismaService } from '../prisma/prisma.service';
 import { LocationsResolver } from './locations.resolver';
 import { LocationsService } from './locations.service';
 import { CountriesService } from '../countries/countries.service';
-// import { Location } from './entities/location.entity';
-import { Location } from '@prisma/client';
-import { Country } from '../countries/entities/country.entity';
-import { CreateLocationInput } from './dto/create-location.input';
-import { UpdateLocationInput } from './dto/update-location.input';
+import {
+  location,
+  locations,
+  createLocationInput,
+  updateLocationInput,
+  country,
+} from '../common/constants/jest.constants';
 
 describe('LocationsResolver', () => {
   let locationsResolver: LocationsResolver;
   let locationsService: LocationsService;
   let countriesService: CountriesService;
-
-  const location: Location = {
-    id: 1100,
-    streetAddress: '93091 Calle della Testa',
-    postalCode: '10934',
-    city: 'Venice',
-    stateProvince: 'Venice',
-    countryId: 'IT',
-  };
-
-  const locations: Location[] = [
-    {
-      id: 1100,
-      streetAddress: '93091 Calle della Testa',
-      postalCode: '10934',
-      city: 'Venice',
-      stateProvince: 'Venice',
-      countryId: 'IT',
-    },
-  ];
-
-  const country: Country = {
-    id: 'KR',
-    name: 'Republic of Korea',
-    regionId: 3,
-  };
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -57,13 +33,6 @@ describe('LocationsResolver', () => {
 
   describe('create', () => {
     it('should create a location', async () => {
-      const createLocationInput: CreateLocationInput = {
-        streetAddress: '93091 Calle della Testa',
-        postalCode: '10934',
-        city: 'Venice',
-        stateProvince: 'Venice',
-        countryId: 'IT',
-      };
       jest
         .spyOn(locationsService, 'create')
         .mockImplementation(async () => location);
@@ -102,13 +71,6 @@ describe('LocationsResolver', () => {
 
   describe('update', () => {
     it('should update a location by id', async () => {
-      const updateLocationInput: UpdateLocationInput = {
-        streetAddress: '93091 Calle della Testa',
-        postalCode: '10934',
-        city: 'Venice',
-        stateProvince: 'Venice',
-        countryId: 'IT',
-      };
       jest
         .spyOn(locationsService, 'update')
         .mockImplementation(async () => location);

@@ -7,11 +7,11 @@ import { LocationsService } from '../locations/locations.service';
 import {
   country,
   countries,
+  createCountryInput,
+  updateCountryInput,
   region,
   locations,
-} from '../common/constants/hr.constants';
-import { CreateCountryInput } from './dto/create-country.input';
-import { UpdateCountryInput } from './dto/update-country.input';
+} from '../common/constants/jest.constants';
 
 describe('CountriesResolver', () => {
   let countriesResolver: CountriesResolver;
@@ -38,11 +38,6 @@ describe('CountriesResolver', () => {
 
   describe('create', () => {
     it('should create a country', async () => {
-      const createCountryInput: CreateCountryInput = {
-        id: 'KR',
-        name: 'Republic of Korea',
-        regionId: 3,
-      };
       jest
         .spyOn(countriesService, 'create')
         .mockImplementation(async () => country);
@@ -72,10 +67,6 @@ describe('CountriesResolver', () => {
 
   describe('update', () => {
     it('should update a country by id', async () => {
-      const updateCountryInput: UpdateCountryInput = {
-        name: 'Republic of Korea',
-        regionId: 3,
-      };
       jest
         .spyOn(countriesService, 'update')
         .mockImplementation(async () => country);

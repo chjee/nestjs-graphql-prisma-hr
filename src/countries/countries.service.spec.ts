@@ -1,9 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CountriesService } from './countries.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { country, countries } from '../common/constants/hr.constants';
-import { CreateCountryInput } from './dto/create-country.input';
-import { UpdateCountryInput } from './dto/update-country.input';
+import {
+  country,
+  countries,
+  createCountryInput,
+  updateCountryInput,
+} from '../common/constants/jest.constants';
 
 describe('CountriesService', () => {
   let countriesService: CountriesService;
@@ -18,11 +21,6 @@ describe('CountriesService', () => {
 
   describe('create', () => {
     it('should create a country', async () => {
-      const createCountryInput: CreateCountryInput = {
-        id: 'KR',
-        name: 'Korea',
-        regionId: 3,
-      };
       jest
         .spyOn(countriesService, 'create')
         .mockImplementation(async () => country);
@@ -52,10 +50,6 @@ describe('CountriesService', () => {
 
   describe('update', () => {
     it('should update a country by id', async () => {
-      const updateCountryInput: UpdateCountryInput = {
-        name: 'Republic of Korea',
-        regionId: 3,
-      };
       jest
         .spyOn(countriesService, 'update')
         .mockImplementation(async () => country);
