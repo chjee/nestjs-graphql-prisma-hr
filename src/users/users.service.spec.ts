@@ -1,32 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '@prisma/client';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
+import {
+  user,
+  users,
+  createUserInput,
+  updateUserInput,
+} from '../common/constants/jest.constants';
 
 describe('UsersService', () => {
   let usersService: UsersService;
-
-  const user: User = {
-    id: 1,
-    createdAt: new Date(),
-    email: 'andrew@prisma.io',
-    name: 'Andrew',
-    password: 'whoami',
-    role: 'ADMIN',
-  };
-
-  const users: User[] = [
-    {
-      id: 1,
-      createdAt: new Date(),
-      email: 'alice@prisma.io',
-      name: 'Alice',
-      password: 'whoami',
-      role: 'USER',
-    },
-  ];
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -38,12 +21,6 @@ describe('UsersService', () => {
 
   describe('create', () => {
     it('should return a user', async () => {
-      const createUserInput: CreateUserInput = {
-        email: 'chjee@naver.com',
-        name: 'Andrew',
-        password: '123456',
-        role: 'ADMIN',
-      };
       jest.spyOn(usersService, 'create').mockImplementation(async () => user);
       expect(await usersService.create(createUserInput)).toBe(user);
     });
@@ -65,9 +42,6 @@ describe('UsersService', () => {
 
   describe('update', () => {
     it('should return a user', async () => {
-      const updateUserInput: UpdateUserInput = {
-        role: 'USER',
-      };
       jest.spyOn(usersService, 'update').mockImplementation(async () => user);
       expect(
         await usersService.update({ where: { id: 1 }, data: updateUserInput }),

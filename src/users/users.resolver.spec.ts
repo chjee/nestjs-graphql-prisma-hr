@@ -1,43 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
-import { User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
 import { ProfilesService } from '../profiles/profiles.service';
-import { Profile } from '../profiles/entities/profile.entity';
+import {
+  user,
+  users,
+  createUserInput,
+  updateUserInput,
+  profile,
+} from '../common/constants/jest.constants';
 
 describe('UsersResolver', () => {
   let usersResolver: UsersResolver;
   let usersService: UsersService;
   let profilesService: ProfilesService;
-
-  const user: User = {
-    id: 1,
-    createdAt: new Date(),
-    email: 'andrew@prisma.io',
-    name: 'Andrew',
-    password: 'whoami',
-    role: 'ADMIN',
-  };
-
-  const users: User[] = [
-    {
-      id: 1,
-      createdAt: new Date(),
-      email: 'alice@prisma.io',
-      name: 'Alice',
-      password: 'whoami',
-      role: 'USER',
-    },
-  ];
-
-  const profile: Profile = {
-    id: 1,
-    bio: 'Happy',
-    userId: 1,
-  };
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -51,13 +28,6 @@ describe('UsersResolver', () => {
 
   describe('create', () => {
     it('should return a user', async () => {
-      const createUserInput: CreateUserInput = {
-        email: 'andrew@prisma.io',
-        name: 'Andrew',
-        password: 'whoami',
-        role: 'ADMIN',
-      };
-
       jest.spyOn(usersService, 'create').mockImplementation(async () => user);
       expect(await usersResolver.createUser(createUserInput)).toBe(user);
     });
@@ -88,10 +58,6 @@ describe('UsersResolver', () => {
 
   describe('update', () => {
     it('should return a user', async () => {
-      const updateUserInput: UpdateUserInput = {
-        role: 'USER',
-      };
-
       jest.spyOn(usersService, 'update').mockImplementation(async () => user);
       expect(await usersResolver.updateUser(1, updateUserInput)).toBe(user);
     });

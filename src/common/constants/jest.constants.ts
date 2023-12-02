@@ -1,5 +1,7 @@
 import { Country, Region, Location, Job, Profile, User } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
+import { CreateUserInput } from './../../users/dto/create-user.input';
+import { UpdateUserInput } from './../../users/dto/update-user.input';
 
 export const country: Country = {
   id: 'KR',
@@ -48,3 +50,14 @@ export const user: User = {
   role: 'ADMIN',
 };
 export const users: User[] = [user];
+
+export const createUserInput: CreateUserInput = {
+  email: 'chjee@naver.com',
+  name: 'Andrew',
+  password: '123456',
+  role: 'ADMIN',
+};
+
+export const updateUserInput: UpdateUserInput = {
+  role: 'USER',
+};
