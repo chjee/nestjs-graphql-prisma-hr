@@ -9,6 +9,9 @@ import { LocationsModule } from './locations/locations.module';
 import { JobsModule } from './jobs/jobs.module';
 import { UsersModule } from './users/users.module';
 import { ProfilesModule } from './profiles/profiles.module';
+import { DepartmentsModule } from './departments/departments.module';
+import { EmployeesModule } from './employees/employees.module';
+import { JobhistoriesModule } from './jobhistories/jobhistories.module';
 
 @Module({
   imports: [
@@ -29,6 +32,9 @@ import { ProfilesModule } from './profiles/profiles.module';
     JobsModule,
     UsersModule,
     ProfilesModule,
+    DepartmentsModule,
+    EmployeesModule,
+    JobhistoriesModule,
   ],
   providers: [],
 })
