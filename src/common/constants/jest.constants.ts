@@ -1,4 +1,14 @@
-import { Country, Region, Location, Job, Profile, User } from '@prisma/client';
+import {
+  Country,
+  Region,
+  Location,
+  Job,
+  Profile,
+  User,
+  Department,
+  Employee,
+  JobHistory,
+} from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { CreateUserInput } from './../../users/dto/create-user.input';
 import { UpdateUserInput } from './../../users/dto/update-user.input';
@@ -10,6 +20,14 @@ import { CreateLocationInput } from './../../locations/dto/create-location.input
 import { UpdateLocationInput } from './../../locations/dto/update-location.input';
 import { CreateProfileInput } from './../../profiles/dto/create-profile.input';
 import { UpdateProfileInput } from './../../profiles/dto/update-profile.input';
+import { UpdateJobInput } from './../../jobs/dto/update-job.input';
+import { CreateJobInput } from './../../jobs/dto/create-job.input';
+import { CreateDepartmentInput } from './../../departments/dto/create-department.input';
+import { UpdateDepartmentInput } from './../../departments/dto/update-department.input';
+import { CreateEmployeeInput } from './../../employees/dto/create-employee.input';
+import { UpdateEmployeeInput } from './../../employees/dto/update-employee.input';
+import { CreateJobhistoryInput } from './../../jobhistories/dto/create-jobhistory.input';
+import { UpdateJobhistoryInput } from './../../jobhistories/dto/update-jobhistory.input';
 
 export const region: Region = {
   id: 5,
@@ -78,6 +96,19 @@ export const job: Job = {
 };
 export const jobs: Job[] = [job];
 
+export const createJobInput: CreateJobInput = {
+  id: 'AC_MGR',
+  title: 'Accounting Manager',
+  minSalary: new Decimal(100000),
+  maxSalary: new Decimal(200000),
+};
+
+export const updateJobInput: UpdateJobInput = {
+  title: 'Accounting Manager',
+  minSalary: new Decimal(100000),
+  maxSalary: new Decimal(200000),
+};
+
 export const profile: Profile = {
   id: 1,
   bio: 'Happy',
@@ -113,4 +144,90 @@ export const createUserInput: CreateUserInput = {
 
 export const updateUserInput: UpdateUserInput = {
   role: 'USER',
+};
+
+export const department: Department = {
+  id: 60,
+  name: 'IT',
+  managerId: 103,
+  locationId: 1400,
+};
+export const departments: Department[] = [department];
+
+export const createDepartmentInput: CreateDepartmentInput = {
+  id: 60,
+  name: 'IT',
+  managerId: 103,
+  locationId: 1400,
+};
+
+export const updateDepartmentInput: UpdateDepartmentInput = {
+  name: 'IT',
+  managerId: 103,
+  locationId: 1400,
+};
+
+export const employee: Employee = {
+  id: 207,
+  firstName: 'andrew',
+  lastName: 'Jee',
+  email: 'andrew@prisma.io',
+  phone: '82.10.9410.5436',
+  hiredAt: new Date(),
+  jobId: 'IT_PROG',
+  salary: new Decimal(9600),
+  commissionPct: new Decimal(0.2),
+  managerId: 103,
+  departmentId: 60,
+};
+export const employees: Employee[] = [employee];
+
+export const createEmployeeInput: CreateEmployeeInput = {
+  id: 220,
+  firstName: 'andrew',
+  lastName: 'Jee',
+  email: 'andrew@prisma.io',
+  phone: '82.10.9410.5436',
+  hiredAt: new Date(),
+  jobId: 'IT_PROG',
+  salary: 9600,
+  commissionPct: 0.2,
+  managerId: 103,
+  departmentId: 60,
+};
+
+export const updateEmployeeInput: UpdateEmployeeInput = {
+  firstName: 'andrew',
+  lastName: 'Jee',
+  phone: '82.10.9410.5436',
+  hiredAt: new Date(),
+  jobId: 'IT_PROG',
+  salary: 9600,
+  commissionPct: 0.2,
+  managerId: 103,
+  departmentId: 60,
+};
+
+export const jobHistory: JobHistory = {
+  employeeId: 103,
+  startedAt: new Date(),
+  endedAt: new Date(),
+  jobId: 'IT_PROG',
+  departmentId: 60,
+};
+export const jobHistories: JobHistory[] = [jobHistory];
+
+export const createJobHistoryInput: CreateJobhistoryInput = {
+  employeeId: 103,
+  startedAt: new Date(),
+  endedAt: new Date(),
+  jobId: 'IT_PROG',
+  departmentId: 60,
+};
+
+export const updateJobHistoryInput: UpdateJobhistoryInput = {
+  startedAt: new Date(),
+  endedAt: new Date(),
+  jobId: 'IT_PROG',
+  departmentId: 60,
 };
