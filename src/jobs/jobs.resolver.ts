@@ -5,12 +5,14 @@ import {
   Args,
   Int,
   ResolveField,
+  Parent,
 } from '@nestjs/graphql';
 import { JobsService } from './jobs.service';
 import { EmployeesService } from '../employees/employees.service';
 import { Job } from './entities/job.entity';
 import { CreateJobInput } from './dto/create-job.input';
 import { UpdateJobInput } from './dto/update-job.input';
+import { Employee } from '../employees/entities/employee.entity';
 
 @Resolver(() => Job)
 export class JobsResolver {
@@ -43,7 +45,7 @@ export class JobsResolver {
   }
 
   @ResolveField()
-  async employees(@Args('id', { type: () => String }) id: string) {
+  async employees(@Parent() { id }: Job): Promise<Employee[]> {
     return this.employeesService.findAll({
       where: { jobId: id },
     });
