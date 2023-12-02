@@ -12,6 +12,7 @@ import { ProfilesService } from '../profiles/profiles.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { Profile } from '../profiles/entities/profile.entity';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -44,7 +45,7 @@ export class UsersResolver {
   }
 
   @ResolveField()
-  async profile(@Parent() { id }: User) {
+  async profile(@Parent() { id }: User): Promise<Profile> {
     return this.profilesService.findOne({ id: id });
   }
 
