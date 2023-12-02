@@ -52,7 +52,7 @@ describe('JobsResolver', () => {
       jest
         .spyOn(employeesService, 'findAll')
         .mockImplementation(async () => employees);
-      expect(await jobsResolver.employees('AC_MGR')).toBe(employees);
+      expect(await jobsResolver.employees(job)).toBe(employees);
     });
   });
 
