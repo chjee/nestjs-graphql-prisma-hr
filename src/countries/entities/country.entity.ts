@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Region } from './../../regions/entities/region.entity';
+import { Location } from './../../locations/entities/location.entity';
 
 @ObjectType({ description: 'Country object' })
 export class Country {
@@ -13,5 +14,8 @@ export class Country {
   regionId: number;
 
   @Field(() => Region, { nullable: true, description: 'Region object' })
-  region?: Region | null;
+  region?: Region;
+
+  @Field(() => [Location], { nullable: true, description: 'Location object' })
+  locations?: Location[];
 }

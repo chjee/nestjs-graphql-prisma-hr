@@ -13,12 +13,15 @@ import { CreateCountryInput } from './dto/create-country.input';
 import { UpdateCountryInput } from './dto/update-country.input';
 import { RegionsService } from '../regions/regions.service';
 import { Region } from '../regions/entities/region.entity';
+import { LocationsService } from '../locations/locations.service';
+import { Location } from '../locations/entities/location.entity';
 
 @Resolver(() => Country)
 export class CountriesResolver {
   constructor(
     private readonly countriesService: CountriesService,
     private readonly regionsService: RegionsService,
+    private readonly locationsService: LocationsService,
   ) {}
 
   @Mutation(() => Country)
@@ -47,6 +50,11 @@ export class CountriesResolver {
   @ResolveField()
   async region(@Parent() { regionId }: Country): Promise<Region> {
     return this.regionsService.findOne({ id: regionId });
+  }
+
+  @ResolveField()
+  async locations(@Parent() { id }: Country): Promise<Location[]> {
+    return this.locationsService.findAll({ where: { countryId: id } });
   }
 
   @Mutation(() => Country)
