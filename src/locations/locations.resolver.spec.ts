@@ -3,18 +3,22 @@ import { PrismaService } from '../prisma/prisma.service';
 import { LocationsResolver } from './locations.resolver';
 import { LocationsService } from './locations.service';
 import { CountriesService } from '../countries/countries.service';
+import { DepartmentsService } from '../departments/departments.service';
+
 import {
   location,
   locations,
   createLocationInput,
   updateLocationInput,
   country,
+  departments,
 } from '../common/constants/jest.constants';
 
 describe('LocationsResolver', () => {
   let locationsResolver: LocationsResolver;
   let locationsService: LocationsService;
   let countriesService: CountriesService;
+  let departmentsService: DepartmentsService;
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -23,12 +27,14 @@ describe('LocationsResolver', () => {
         LocationsResolver,
         LocationsService,
         CountriesService,
+        DepartmentsService,
       ],
     }).compile();
 
     locationsResolver = moduleRef.get<LocationsResolver>(LocationsResolver);
     locationsService = moduleRef.get<LocationsService>(LocationsService);
     countriesService = moduleRef.get<CountriesService>(CountriesService);
+    departmentsService = moduleRef.get<DepartmentsService>(DepartmentsService);
   });
 
   describe('create', () => {
@@ -66,6 +72,15 @@ describe('LocationsResolver', () => {
         .spyOn(countriesService, 'findOne')
         .mockImplementation(async () => country);
       expect(await locationsResolver.country(location)).toBe(country);
+    });
+  });
+
+  describe('departments', () => {
+    it('should return an array of departments by location id', async () => {
+      jest
+        .spyOn(departmentsService, 'findAll')
+        .mockImplementation(async () => departments);
+      expect(await locationsResolver.departments(location)).toBe(departments);
     });
   });
 

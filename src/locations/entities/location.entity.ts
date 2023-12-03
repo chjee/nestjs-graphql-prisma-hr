@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Country } from './../../countries/entities/country.entity';
+import { Department } from './../../departments/entities/department.entity';
 
 @ObjectType({ description: 'Location object' })
 export class Location {
@@ -24,6 +25,9 @@ export class Location {
   @Field(() => Country, { nullable: true, description: 'Country object' })
   country?: Country;
 
-  // @Field(() => [Department], { description: 'Department object' })
-  // departments?: Department[] | null;
+  @Field(() => [Department], {
+    nullable: true,
+    description: 'Department object',
+  })
+  departments?: Department[];
 }

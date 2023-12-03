@@ -12,12 +12,16 @@ import { Location } from './entities/location.entity';
 import { CreateLocationInput } from './dto/create-location.input';
 import { UpdateLocationInput } from './dto/update-location.input';
 import { CountriesService } from '../countries/countries.service';
+import { Country } from '../countries/entities/country.entity';
+import { DepartmentsService } from '../departments/departments.service';
+import { Department } from '../departments/entities/department.entity';
 
 @Resolver(() => Location)
 export class LocationsResolver {
   constructor(
     private readonly locationsService: LocationsService,
     private readonly countriesService: CountriesService,
+    private readonly departmentsService: DepartmentsService,
   ) {}
 
   @Mutation(() => Location)
@@ -44,8 +48,13 @@ export class LocationsResolver {
   }
 
   @ResolveField()
-  async country(@Parent() { countryId }: Location) {
+  async country(@Parent() { countryId }: Location): Promise<Country> {
     return this.countriesService.findOne({ id: countryId });
+  }
+
+  @ResolveField()
+  async departments(@Parent() { id }: Location): Promise<Department[]> {
+    return this.departmentsService.findAll({ where: { locationId: id } });
   }
 
   @Mutation(() => Location)
