@@ -9,16 +9,19 @@ import {
 } from '@nestjs/graphql';
 import { JobsService } from './jobs.service';
 import { EmployeesService } from '../employees/employees.service';
+import { JobhistoriesService } from '../jobhistories/jobhistories.service';
 import { Job } from './entities/job.entity';
 import { CreateJobInput } from './dto/create-job.input';
 import { UpdateJobInput } from './dto/update-job.input';
 import { Employee } from '../employees/entities/employee.entity';
+import { Jobhistory } from '../jobhistories/entities/jobhistory.entity';
 
 @Resolver(() => Job)
 export class JobsResolver {
   constructor(
     private readonly jobsService: JobsService,
     private readonly employeesService: EmployeesService,
+    private readonly jobhistoriesService: JobhistoriesService,
   ) {}
 
   @Mutation(() => Job)
@@ -47,6 +50,13 @@ export class JobsResolver {
   @ResolveField()
   async employees(@Parent() { id }: Job): Promise<Employee[]> {
     return this.employeesService.findAll({
+      where: { jobId: id },
+    });
+  }
+
+  @ResolveField()
+  async jobHistories(@Parent() { id }: Job): Promise<Jobhistory[]> {
+    return this.jobhistoriesService.findAll({
       where: { jobId: id },
     });
   }

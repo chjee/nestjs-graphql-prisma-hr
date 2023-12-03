@@ -3,27 +3,38 @@ import { JobsResolver } from './jobs.resolver';
 import { JobsService } from './jobs.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmployeesService } from '../employees/employees.service';
+import { JobhistoriesService } from '../jobhistories/jobhistories.service';
 import {
   job,
   jobs,
   createJobInput,
   updateJobInput,
   employees,
+  jobHistories,
 } from '../common/constants/jest.constants';
 
 describe('JobsResolver', () => {
   let jobsResolver: JobsResolver;
   let jobsService: JobsService;
   let employeesService: EmployeesService;
+  let jobhistoriesService: JobhistoriesService;
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      providers: [PrismaService, JobsResolver, JobsService, EmployeesService],
+      providers: [
+        PrismaService,
+        JobsResolver,
+        JobsService,
+        EmployeesService,
+        JobhistoriesService,
+      ],
     }).compile();
 
     jobsResolver = moduleRef.get<JobsResolver>(JobsResolver);
     jobsService = moduleRef.get<JobsService>(JobsService);
     employeesService = moduleRef.get<EmployeesService>(EmployeesService);
+    jobhistoriesService =
+      moduleRef.get<JobhistoriesService>(JobhistoriesService);
   });
 
   describe('create', () => {
@@ -53,6 +64,15 @@ describe('JobsResolver', () => {
         .spyOn(employeesService, 'findAll')
         .mockImplementation(async () => employees);
       expect(await jobsResolver.employees(job)).toBe(employees);
+    });
+  });
+
+  describe('jobHistories', () => {
+    it('should return an array of job histories', async () => {
+      jest
+        .spyOn(jobhistoriesService, 'findAll')
+        .mockImplementation(async () => jobHistories);
+      expect(await jobsResolver.jobHistories(job)).toBe(jobHistories);
     });
   });
 

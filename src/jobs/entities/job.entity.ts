@@ -1,6 +1,7 @@
 import { ObjectType, Field, Float } from '@nestjs/graphql';
 import { Decimal } from '@prisma/client/runtime/library';
 import { Employee } from './../../employees/entities/employee.entity';
+import { Jobhistory } from './../../jobhistories/entities/jobhistory.entity';
 
 @ObjectType({ description: 'Job object' })
 export class Job {
@@ -17,7 +18,8 @@ export class Job {
   maxSalary?: Decimal;
 
   @Field(() => [Employee], { nullable: true, description: 'Department ID' })
-  employees?: Employee[] | null;
+  employees?: Employee[];
 
-  // jobHistories?: any;
+  @Field(() => [Jobhistory], { nullable: true, description: 'Job histories' })
+  jobHistories?: Jobhistory[];
 }
