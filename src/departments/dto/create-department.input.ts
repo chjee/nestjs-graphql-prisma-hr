@@ -15,12 +15,12 @@ export class CreateDepartmentInput {
   @Length(2, 30)
   name: string;
 
-  @Field(() => Int, { nullable: true, description: 'Department manager ID' })
+  @Field(() => Int, { description: 'Department manager ID' })
   @IsInt()
   @Min(1)
   managerId: number;
 
-  @Field(() => Int, { nullable: true, description: 'Department location ID' })
+  @Field(() => Int, { description: 'Department location ID' })
   @IsInt()
   @Min(1)
   locationId: number;
