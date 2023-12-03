@@ -13,8 +13,8 @@ import { CreateEmployeeInput } from './dto/create-employee.input';
 import { UpdateEmployeeInput } from './dto/update-employee.input';
 import { DepartmentsService } from '../departments/departments.service';
 import { JobsService } from '../jobs/jobs.service';
-import { Department } from 'src/departments/entities/department.entity';
-import { Job } from 'src/jobs/entities/job.entity';
+import { Department } from '../departments/entities/department.entity';
+import { Job } from '../jobs/entities/job.entity';
 
 @Resolver(() => Employee)
 export class EmployeesResolver {

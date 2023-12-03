@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RegionsService } from './regions.service';
 import { RegionsResolver } from './regions.resolver';
-import { CountriesService } from 'src/countries/countries.service';
+import { CountriesService } from '../countries/countries.service';
 
 @Module({
   providers: [RegionsResolver, RegionsService, CountriesService],

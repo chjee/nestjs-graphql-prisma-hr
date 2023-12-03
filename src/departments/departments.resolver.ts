@@ -14,7 +14,7 @@ import { UpdateDepartmentInput } from './dto/update-department.input';
 import { EmployeesService } from '../employees/employees.service';
 import { LocationsService } from '../locations/locations.service';
 import { Location } from '../locations/entities/location.entity';
-import { Employee } from 'src/employees/entities/employee.entity';
+import { Employee } from '../employees/entities/employee.entity';
 
 @Resolver(() => Department)
 export class DepartmentsResolver {
