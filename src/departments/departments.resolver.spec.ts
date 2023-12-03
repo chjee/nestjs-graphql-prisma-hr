@@ -4,6 +4,7 @@ import { DepartmentsService } from './departments.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmployeesService } from '../employees/employees.service';
 import { LocationsService } from '../locations/locations.service';
+import { JobhistoriesService } from '../jobhistories/jobhistories.service';
 import {
   department,
   departments,
@@ -12,6 +13,7 @@ import {
   location,
   employee,
   employees,
+  jobHistories,
 } from '../common/constants/jest.constants';
 
 describe('DepartmentsResolver', () => {
@@ -19,6 +21,7 @@ describe('DepartmentsResolver', () => {
   let departmentsService: DepartmentsService;
   let employeesService: EmployeesService;
   let locationsService: LocationsService;
+  let jobhistoriesService: JobhistoriesService;
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -28,6 +31,7 @@ describe('DepartmentsResolver', () => {
         DepartmentsService,
         EmployeesService,
         LocationsService,
+        JobhistoriesService,
       ],
     }).compile();
 
@@ -36,6 +40,8 @@ describe('DepartmentsResolver', () => {
     departmentsService = moduleRef.get<DepartmentsService>(DepartmentsService);
     employeesService = moduleRef.get<EmployeesService>(EmployeesService);
     locationsService = moduleRef.get<LocationsService>(LocationsService);
+    jobhistoriesService =
+      moduleRef.get<JobhistoriesService>(JobhistoriesService);
   });
 
   describe('create', () => {
@@ -91,6 +97,17 @@ describe('DepartmentsResolver', () => {
         .spyOn(employeesService, 'findAll')
         .mockImplementation(async () => employees);
       expect(await departmentsResolver.employees(department)).toBe(employees);
+    });
+  });
+
+  describe('jobhistories', () => {
+    it('should return an array of job histories', async () => {
+      jest
+        .spyOn(jobhistoriesService, 'findAll')
+        .mockImplementation(async () => jobHistories);
+      expect(await departmentsResolver.jobhistories(department)).toBe(
+        jobHistories,
+      );
     });
   });
 

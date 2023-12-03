@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Employee } from './../../employees/entities/employee.entity';
 import { Location } from './../../locations/entities/location.entity';
+import { Jobhistory } from './../../jobhistories/entities/jobhistory.entity';
 
 @ObjectType({ description: 'Department object' })
 export class Department {
@@ -20,17 +21,23 @@ export class Department {
     nullable: true,
     description: 'Department manager',
   })
-  manager?: Employee | null;
+  manager?: Employee;
 
   @Field(() => Location, {
     nullable: true,
     description: 'Department location',
   })
-  location?: Location | null;
+  location?: Location;
 
   @Field(() => [Employee], {
     nullable: true,
     description: 'Department employees',
   })
-  employees?: Employee[] | null;
+  employees?: Employee[];
+
+  @Field(() => [Jobhistory], {
+    nullable: true,
+    description: 'Department job histories',
+  })
+  jobhistories?: Jobhistory[];
 }

@@ -13,8 +13,10 @@ import { CreateDepartmentInput } from './dto/create-department.input';
 import { UpdateDepartmentInput } from './dto/update-department.input';
 import { EmployeesService } from '../employees/employees.service';
 import { LocationsService } from '../locations/locations.service';
+import { JobhistoriesService } from '../jobhistories/jobhistories.service';
 import { Location } from '../locations/entities/location.entity';
 import { Employee } from '../employees/entities/employee.entity';
+import { Jobhistory } from '../jobhistories/entities/jobhistory.entity';
 
 @Resolver(() => Department)
 export class DepartmentsResolver {
@@ -22,6 +24,7 @@ export class DepartmentsResolver {
     private readonly departmentsService: DepartmentsService,
     private readonly employeesService: EmployeesService,
     private readonly locationsService: LocationsService,
+    private readonly jobhistoriesService: JobhistoriesService,
   ) {}
 
   @Mutation(() => Department)
@@ -62,6 +65,11 @@ export class DepartmentsResolver {
   @ResolveField()
   async employees(@Parent() { id }: Department): Promise<Employee[]> {
     return this.employeesService.findAll({ where: { departmentId: id } });
+  }
+
+  @ResolveField()
+  async jobhistories(@Parent() { id }: Department): Promise<Jobhistory[]> {
+    return this.jobhistoriesService.findAll({ where: { departmentId: id } });
   }
 
   @Mutation(() => Department)
