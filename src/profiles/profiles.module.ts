@@ -5,6 +5,5 @@ import { UsersService } from '../users/users.service';
 
 @Module({
   providers: [ProfilesResolver, ProfilesService, UsersService],
-  exports: [ProfilesService],
 })
 export class ProfilesModule {}
