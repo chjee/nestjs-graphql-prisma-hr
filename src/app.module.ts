@@ -12,6 +12,8 @@ import { ProfilesModule } from './profiles/profiles.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { EmployeesModule } from './employees/employees.module';
 import { JobhistoriesModule } from './jobhistories/jobhistories.module';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -35,7 +37,11 @@ import { JobhistoriesModule } from './jobhistories/jobhistories.module';
     DepartmentsModule,
     EmployeesModule,
     JobhistoriesModule,
+    AuthModule,
   ],
-  providers: [],
+  providers: [
+    { provide: 'APP_GUARD', useExisting: JwtAuthGuard },
+    JwtAuthGuard,
+  ],
 })
 export class AppModule {}
