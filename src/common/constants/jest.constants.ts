@@ -226,7 +226,6 @@ export const createJobHistoryInput: CreateJobhistoryInput = {
 };
 
 export const updateJobHistoryInput: UpdateJobhistoryInput = {
-  startedAt: new Date(),
   endedAt: new Date(),
   jobId: 'IT_PROG',
   departmentId: 60,
