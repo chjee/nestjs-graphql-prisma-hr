@@ -10,7 +10,7 @@ import {
 import { JobhistoriesService } from './jobhistories.service';
 import { Jobhistory } from './entities/jobhistory.entity';
 import { CreateJobhistoryInput } from './dto/create-jobhistory.input';
-import { Prisma } from '@prisma/client';
+import { UpdateJobhistoryInput } from './dto/update-jobhistory.input';
 import { DepartmentsService } from '../departments/departments.service';
 import { EmployeesService } from '../employees/employees.service';
 import { JobsService } from '../jobs/jobs.service';
@@ -38,13 +38,13 @@ export class JobhistoriesResolver {
   async findAll(
     @Args('skip', { type: () => Int, nullable: true }) skip?: number,
     @Args('take', { type: () => Int, nullable: true }) take?: number,
-    @Args('where', { type: () => String, nullable: true })
-    where?: Prisma.JobHistoryWhereInput,
+    @Args('employeeId', { type: () => Int, nullable: true })
+    employeeId?: number,
   ): Promise<Jobhistory[]> {
     return this.jobhistoriesService.findAll({
       skip: skip,
       take: take,
-      where: where,
+      where: { employeeId: employeeId },
     });
   }
 
@@ -76,6 +76,23 @@ export class JobhistoriesResolver {
     @Parent() { departmentId }: Jobhistory,
   ): Promise<Department> {
     return this.departmentsService.findOne({ id: departmentId });
+  }
+
+  @Mutation(() => Jobhistory)
+  async updateJobhistory(
+    @Args('employeeId', { type: () => Int }) employeeId: number,
+    @Args('startedAt', { type: () => String }) startedAt: Date,
+    @Args('updateJobhistoryInput') updateJobhistoryInput: UpdateJobhistoryInput,
+  ): Promise<Jobhistory> {
+    return this.jobhistoriesService.update({
+      where: {
+        employeeId_startedAt: {
+          employeeId: employeeId,
+          startedAt: startedAt,
+        },
+      },
+      data: updateJobhistoryInput,
+    });
   }
 
   @Mutation(() => Jobhistory)

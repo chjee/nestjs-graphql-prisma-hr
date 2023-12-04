@@ -8,6 +8,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   jobHistory,
   jobHistories,
+  createJobHistoryInput,
+  updateJobHistoryInput,
   job,
   employee,
   department,
@@ -46,9 +48,9 @@ describe('JobhistoriesResolver', () => {
       jest
         .spyOn(jobhistoriesService, 'create')
         .mockImplementation(async () => jobHistory);
-      expect(await jobhistoriesResolver.createJobhistory(jobHistory)).toBe(
-        jobHistory,
-      );
+      expect(
+        await jobhistoriesResolver.createJobhistory(createJobHistoryInput),
+      ).toBe(jobHistory);
     });
   });
 
@@ -99,17 +101,29 @@ describe('JobhistoriesResolver', () => {
     });
   });
 
+  describe('update', () => {
+    it('should update a jobhistory', async () => {
+      jest
+        .spyOn(jobhistoriesService, 'update')
+        .mockImplementation(async () => jobHistory);
+      expect(
+        await jobhistoriesResolver.updateJobhistory(
+          102,
+          new Date(),
+          updateJobHistoryInput,
+        ),
+      ).toBe(jobHistory);
+    });
+  });
+
   describe('remove', () => {
     it('should remove a jobhistory', async () => {
       jest
         .spyOn(jobhistoriesService, 'remove')
         .mockImplementation(async () => jobHistory);
-      expect(
-        await jobhistoriesResolver.removeJobhistory(
-          100,
-          new Date('2001-09-17'),
-        ),
-      ).toBe(jobHistory);
+      expect(await jobhistoriesResolver.removeJobhistory(100, new Date())).toBe(
+        jobHistory,
+      );
     });
   });
 });
