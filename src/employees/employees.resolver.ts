@@ -15,6 +15,8 @@ import { DepartmentsService } from '../departments/departments.service';
 import { JobsService } from '../jobs/jobs.service';
 import { Department } from '../departments/entities/department.entity';
 import { Job } from '../jobs/entities/job.entity';
+import { JobhistoriesService } from '../jobhistories/jobhistories.service';
+import { Jobhistory } from '../jobhistories/entities/jobhistory.entity';
 
 @Resolver(() => Employee)
 export class EmployeesResolver {
@@ -22,6 +24,7 @@ export class EmployeesResolver {
     private readonly employeesService: EmployeesService,
     private readonly departmentsService: DepartmentsService,
     private readonly jobsService: JobsService,
+    private readonly jobhistoriesService: JobhistoriesService,
   ) {}
 
   @Mutation(() => Employee)
@@ -67,6 +70,11 @@ export class EmployeesResolver {
   @ResolveField()
   async otherEmployees(@Parent() { id }: Employee): Promise<Employee[]> {
     return this.employeesService.findAll({ where: { managerId: id } });
+  }
+
+  @ResolveField()
+  async jobHistories(@Parent() { id }: Employee): Promise<Jobhistory[]> {
+    return this.jobhistoriesService.findAll({ where: { employeeId: id } });
   }
 
   @Mutation(() => Employee)
