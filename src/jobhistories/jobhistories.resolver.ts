@@ -51,7 +51,7 @@ export class JobhistoriesResolver {
   @Query(() => Jobhistory, { name: 'getJobHistoryByEmployeeId' })
   async findOne(
     @Args('employeeId', { type: () => Int }) employeeId: number,
-    @Args('startedAt', { type: () => Date }) startedAt: Date,
+    @Args('startedAt', { type: () => String }) startedAt: Date,
   ): Promise<Jobhistory> {
     return this.jobhistoriesService.findOne({
       employeeId_startedAt: {
@@ -76,6 +76,23 @@ export class JobhistoriesResolver {
     @Parent() { departmentId }: Jobhistory,
   ): Promise<Department> {
     return this.departmentsService.findOne({ id: departmentId });
+  }
+
+  @Mutation(() => Jobhistory)
+  async updateJobhistory(
+    @Args('employeeId', { type: () => Int }) employeeId: number,
+    @Args('startedAt', { type: () => Date }) startedAt: Date,
+    @Args('updateJobhistoryInput') updateJobhistoryInput: UpdateJobhistoryInput,
+  ): Promise<Jobhistory> {
+    return this.jobhistoriesService.update({
+      where: {
+        employeeId_startedAt: {
+          employeeId: employeeId,
+          startedAt: startedAt,
+        },
+      },
+      data: updateJobhistoryInput,
+    });
   }
 
   @Mutation(() => Jobhistory)
