@@ -1,6 +1,6 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import {
-  IsDateString,
+  IsDate,
   IsInt,
   IsNotEmpty,
   IsString,
@@ -18,12 +18,12 @@ export class CreateJobhistoryInput {
 
   @Field(() => Date, { description: 'Start Date' })
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
   startedAt: Date;
 
-  @Field(() => String, { description: 'End Date' })
+  @Field(() => Date, { description: 'End Date' })
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
   endedAt: Date;
 
   @Field(() => String, { description: 'Job ID' })
