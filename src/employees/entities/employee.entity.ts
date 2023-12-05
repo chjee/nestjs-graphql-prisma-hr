@@ -1,4 +1,10 @@
-import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
+import {
+  ObjectType,
+  Field,
+  Int,
+  Float,
+  GraphQLISODateTime,
+} from '@nestjs/graphql';
 import { Decimal } from '@prisma/client/runtime/library';
 import { Department } from './../../departments/entities/department.entity';
 import { Job } from './../../jobs/entities/job.entity';
@@ -21,7 +27,7 @@ export class Employee {
   @Field(() => String, { nullable: true, description: 'Employee phone number' })
   phone?: string | null;
 
-  @Field(() => Date, { description: 'Employee hire date' })
+  @Field(() => GraphQLISODateTime, { description: 'Employee hire date' })
   hiredAt: Date;
 
   @Field(() => String, { description: 'Employee job ID' })

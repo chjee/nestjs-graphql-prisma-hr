@@ -1,4 +1,10 @@
-import { InputType, Int, Field, Float } from '@nestjs/graphql';
+import {
+  InputType,
+  Int,
+  Field,
+  Float,
+  GraphQLISODateTime,
+} from '@nestjs/graphql';
 import {
   IsDate,
   IsEmail,
@@ -40,7 +46,7 @@ export class CreateEmployeeInput {
   @Length(2, 20)
   phone?: string | null;
 
-  @Field(() => Date, { description: 'Employee hire date' })
+  @Field(() => GraphQLISODateTime, { description: 'Employee hire date' })
   @IsDate()
   hiredAt: Date;
 
