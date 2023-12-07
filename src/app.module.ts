@@ -14,6 +14,7 @@ import { EmployeesModule } from './employees/employees.module';
 import { JobhistoriesModule } from './jobhistories/jobhistories.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { AuthModule } from './auth/auth.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AuthModule } from './auth/auth.module';
     DepartmentsModule,
     EmployeesModule,
     JobhistoriesModule,
+    CommonModule,
     AuthModule,
   ],
   providers: [
