@@ -51,7 +51,7 @@ export class JobhistoriesResolver {
   @Query(() => Jobhistory, { name: 'getJobhistoryByEmployeeId' })
   async findOne(
     @Args('employeeId', { type: () => Int }) employeeId: number,
-    @Args('startedAt', { type: () => String }) startedAt: Date,
+    @Args('startedAt', { type: () => Date }) startedAt: Date,
   ): Promise<Jobhistory> {
     return this.jobhistoriesService.findOne({
       employeeId_startedAt: {

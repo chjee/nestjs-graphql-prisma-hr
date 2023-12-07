@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, GraphQLISODateTime } from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Employee } from './../../employees/entities/employee.entity';
 import { Job } from './../../jobs/entities/job.entity';
 import { Department } from './../../departments/entities/department.entity';
@@ -8,10 +8,10 @@ export class Jobhistory {
   @Field(() => Int, { description: 'Employee ID' })
   employeeId: number;
 
-  @Field(() => GraphQLISODateTime, { description: 'Start Date' })
+  @Field(() => Date, { description: 'Start Date' })
   startedAt: Date;
 
-  @Field(() => GraphQLISODateTime, { description: 'End Date' })
+  @Field(() => Date, { description: 'End Date' })
   endedAt: Date;
 
   @Field(() => String, { description: 'Job ID' })

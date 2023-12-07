@@ -16,9 +16,9 @@ describe('JobhistoriesResolver (e2e)', () => {
   };
 
   const mockJobHistory = {
-    employeeId: 103,
-    // startedAt: new Date(),
-    // endedAt: new Date(),
+    employeeId: 102,
+    // startedAt: 1669852800,
+    // endedAt: 1701388800,
     jobId: 'IT_PROG',
     departmentId: 60,
   };
@@ -46,8 +46,8 @@ describe('JobhistoriesResolver (e2e)', () => {
             createJobhistory  (
               createJobhistoryInput: {
                 employeeId: 102
-                startedAt: "2022-12-01T00:00:00.000Z"
-                endedAt: "2023-12-01T00:00:00.000Z"
+                startedAt: 1669852800
+                endedAt: 1701388800
                 jobId: "IT_PROG"
                 departmentId: 60
              })
@@ -94,7 +94,7 @@ describe('JobhistoriesResolver (e2e)', () => {
           query {
             getJobhistoryByEmployeeId(
               employeeId: 101
-              startedAt: "2001-09-21T00:00:00.000Z"
+              startedAt: 1669852800
             )      
             {
               employeeId
@@ -120,7 +120,7 @@ describe('JobhistoriesResolver (e2e)', () => {
           mutation {
             updateJobhistory (
               employeeId: 102
-              startedAt: "2022-12-01T00:00:00.000Z"
+              startedAt: 1669852800
               updateJobhistoryInput: {
                   departmentId: 110
               }
@@ -146,7 +146,7 @@ describe('JobhistoriesResolver (e2e)', () => {
           mutation {
             removeJobhistory (
               employeeId: 102
-              startedAt: "2022-12-01T00:00:00.000Z"
+              startedAt: 1669852800
             )
             {
               employeeId

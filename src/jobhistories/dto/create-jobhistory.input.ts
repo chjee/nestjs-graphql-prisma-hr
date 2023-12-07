@@ -1,4 +1,4 @@
-import { InputType, Int, Field, GraphQLISODateTime } from '@nestjs/graphql';
+import { InputType, Int, Field } from '@nestjs/graphql';
 import {
   IsDate,
   IsInt,
@@ -16,12 +16,12 @@ export class CreateJobhistoryInput {
   @Min(1)
   employeeId: number;
 
-  @Field(() => GraphQLISODateTime, { description: 'Start Date' })
+  @Field(() => Date, { description: 'Start Date' })
   @IsNotEmpty()
   @IsDate()
   startedAt: Date;
 
-  @Field(() => GraphQLISODateTime, { description: 'End Date' })
+  @Field(() => Date, { description: 'End Date' })
   @IsNotEmpty()
   @IsDate()
   endedAt: Date;
