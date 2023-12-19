@@ -1,7 +1,7 @@
 {
   "name": "nestjs-graphql-prisma-hr",
   "version": "0.0.1",
-  "description": "NestJS, GraphQL, Prisma, MongoDB, Typescript를 이용한 HR API",
+  "description": "NestJS, GraphQL, Prisma, MySQL, Typescript, Jest, Supertest를 이용한 HR API",
   "author": "Changhoon Jee <chjee71@gmail.com>",
   "private": true,
   "license": "UNLICENSED",
