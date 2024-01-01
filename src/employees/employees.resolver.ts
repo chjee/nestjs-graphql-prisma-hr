@@ -45,7 +45,7 @@ export class EmployeesResolver {
     });
   }
 
-  @Query(() => Employee, { name: 'getEmployeeById' })
+  @Query(() => Employee, { nullable: true, name: 'getEmployeeById' })
   async findOne(
     @Args('id', { type: () => Int }) id: number,
   ): Promise<Employee> {
@@ -77,7 +77,7 @@ export class EmployeesResolver {
     return this.jobhistoriesService.findAll({ where: { employeeId: id } });
   }
 
-  @Mutation(() => Employee)
+  @Mutation(() => Employee, { nullable: true, name: 'updateEmployee' })
   async updateEmployee(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateEmployeeInput') updateEmployeeInput: UpdateEmployeeInput,
@@ -88,10 +88,10 @@ export class EmployeesResolver {
     });
   }
 
-  @Mutation(() => Employee)
+  @Mutation(() => Employee, { nullable: true, name: 'removeEmployee' })
   async removeEmployee(
     @Args('id', { type: () => Int }) id: number,
-  ): Promise<any> {
+  ): Promise<Employee> {
     return this.employeesService.remove({ id: id });
   }
 }

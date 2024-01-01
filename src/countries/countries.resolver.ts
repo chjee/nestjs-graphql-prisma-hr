@@ -42,7 +42,7 @@ export class CountriesResolver {
     });
   }
 
-  @Query(() => Country, { name: 'getCountryById' })
+  @Query(() => Country, { nullable: true, name: 'getCountryById' })
   async findOne(@Args('id', { type: () => String }) id: string) {
     return this.countriesService.findOne({ id: id });
   }
@@ -57,7 +57,7 @@ export class CountriesResolver {
     return this.locationsService.findAll({ where: { countryId: id } });
   }
 
-  @Mutation(() => Country)
+  @Mutation(() => Country, { nullable: true, name: 'updateCountry' })
   updateCountry(
     @Args('id', { type: () => String }) id: string,
     @Args('updateCountryInput') updateCountryInput: UpdateCountryInput,
@@ -68,7 +68,7 @@ export class CountriesResolver {
     });
   }
 
-  @Mutation(() => Country)
+  @Mutation(() => Country, { nullable: true, name: 'removeCountry' })
   removeCountry(@Args('id', { type: () => String }) id: string) {
     return this.countriesService.remove({ id: id });
   }

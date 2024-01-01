@@ -48,7 +48,10 @@ export class JobhistoriesResolver {
     });
   }
 
-  @Query(() => Jobhistory, { name: 'getJobhistoryByEmployeeId' })
+  @Query(() => Jobhistory, {
+    nullable: true,
+    name: 'getJobhistoryByEmployeeId',
+  })
   async findOne(
     @Args('employeeId', { type: () => Int }) employeeId: number,
     @Args('startedAt', { type: () => Date }) startedAt: Date,
@@ -78,7 +81,7 @@ export class JobhistoriesResolver {
     return this.departmentsService.findOne({ id: departmentId });
   }
 
-  @Mutation(() => Jobhistory)
+  @Mutation(() => Jobhistory, { nullable: true, name: 'updateJobhistory' })
   async updateJobhistory(
     @Args('employeeId', { type: () => Int }) employeeId: number,
     @Args('startedAt', { type: () => Date }) startedAt: Date,
@@ -95,7 +98,7 @@ export class JobhistoriesResolver {
     });
   }
 
-  @Mutation(() => Jobhistory)
+  @Mutation(() => Jobhistory, { nullable: true, name: 'removeJobhistory' })
   async removeJobhistory(
     @Args('employeeId', { type: () => Int }) employeeId: number,
     @Args('startedAt', { type: () => Date }) startedAt: Date,

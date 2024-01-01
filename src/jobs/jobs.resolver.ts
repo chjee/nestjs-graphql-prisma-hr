@@ -42,7 +42,7 @@ export class JobsResolver {
     });
   }
 
-  @Query(() => Job, { name: 'getJobById' })
+  @Query(() => Job, { nullable: true, name: 'getJobById' })
   async findOne(@Args('id', { type: () => String }) id: string): Promise<Job> {
     return this.jobsService.findOne({ id: id });
   }
@@ -61,7 +61,7 @@ export class JobsResolver {
     });
   }
 
-  @Mutation(() => Job)
+  @Mutation(() => Job, { nullable: true, name: 'updateJob' })
   updateJob(
     @Args('id', { type: () => String }) id: string,
     @Args('updateJobInput') updateJobInput: UpdateJobInput,
@@ -72,7 +72,7 @@ export class JobsResolver {
     });
   }
 
-  @Mutation(() => Job)
+  @Mutation(() => Job, { nullable: true, name: 'removeJob' })
   removeJob(@Args('id', { type: () => String }) id: string) {
     return this.jobsService.remove({ id: id });
   }

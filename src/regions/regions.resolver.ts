@@ -39,7 +39,7 @@ export class RegionsResolver {
     });
   }
 
-  @Query(() => Region, { name: 'getRegionById' })
+  @Query(() => Region, { nullable: true, name: 'getRegionById' })
   async findOne(@Args('id', { type: () => Int }) id: number): Promise<Region> {
     return this.regionsService.findOne({ id: id });
   }
@@ -49,7 +49,7 @@ export class RegionsResolver {
     return this.countriesService.findAll({ where: { regionId: id } });
   }
 
-  @Mutation(() => Region)
+  @Mutation(() => Region, { nullable: true, name: 'updateRegion' })
   async updateRegion(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateRegionInput') updateRegionInput: UpdateRegionInput,
@@ -60,7 +60,7 @@ export class RegionsResolver {
     });
   }
 
-  @Mutation(() => Region)
+  @Mutation(() => Region, { nullable: true, name: 'removeRegion' })
   removeRegion(@Args('id', { type: () => Int }) id: number): Promise<any> {
     return this.regionsService.remove({ id: id });
   }

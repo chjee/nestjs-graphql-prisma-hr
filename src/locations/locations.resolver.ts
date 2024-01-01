@@ -42,7 +42,7 @@ export class LocationsResolver {
     });
   }
 
-  @Query(() => Location, { name: 'getLocationById' })
+  @Query(() => Location, { nullable: true, name: 'getLocationById' })
   findOne(@Args('id', { type: () => Int }) id: number): Promise<Location> {
     return this.locationsService.findOne({ id: id });
   }
@@ -57,7 +57,7 @@ export class LocationsResolver {
     return this.departmentsService.findAll({ where: { locationId: id } });
   }
 
-  @Mutation(() => Location)
+  @Mutation(() => Location, { nullable: true, name: 'updateLocation' })
   updateLocation(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateLocationInput') updateLocationInput: UpdateLocationInput,
@@ -68,7 +68,7 @@ export class LocationsResolver {
     });
   }
 
-  @Mutation(() => Location)
+  @Mutation(() => Location, { nullable: true, name: 'removeLocation' })
   removeLocation(
     @Args('id', { type: () => Int }) id: number,
   ): Promise<Location> {

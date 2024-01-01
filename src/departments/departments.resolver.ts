@@ -45,7 +45,7 @@ export class DepartmentsResolver {
     });
   }
 
-  @Query(() => Department, { name: 'getDepartmentById' })
+  @Query(() => Department, { nullable: true, name: 'getDepartmentById' })
   async findOne(
     @Args('id', { type: () => Int }) id: number,
   ): Promise<Department> {
@@ -72,7 +72,7 @@ export class DepartmentsResolver {
     return this.jobhistoriesService.findAll({ where: { departmentId: id } });
   }
 
-  @Mutation(() => Department)
+  @Mutation(() => Department, { nullable: true, name: 'updateDepartment' })
   async updateDepartment(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateDepartmentInput') updateDepartmentInput: UpdateDepartmentInput,
@@ -83,7 +83,7 @@ export class DepartmentsResolver {
     });
   }
 
-  @Mutation(() => Department)
+  @Mutation(() => Department, { nullable: true, name: 'removeDepartment' })
   async removeDepartment(
     @Args('id', { type: () => Int }) id: number,
   ): Promise<any> {
