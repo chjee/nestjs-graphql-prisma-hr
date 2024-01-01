@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Location, Prisma } from '@prisma/client';
 
@@ -29,14 +29,7 @@ export class LocationsService {
   }
 
   async findOne(where: Prisma.LocationWhereUniqueInput): Promise<Location> {
-    const location = await this.prisma.location.findUnique({ where });
-
-    if (!location) {
-      this.logger.error(`Location with id(${where.id}) not found`);
-      throw new NotFoundException();
-    }
-
-    return location;
+    return this.prisma.location.findUnique({ where });
   }
 
   async update(params: {
@@ -44,15 +37,29 @@ export class LocationsService {
     data: Prisma.LocationUpdateInput;
   }): Promise<Location> {
     const { where, data } = params;
-    return this.prisma.location.update({
-      data,
-      where,
-    });
+    try {
+      return await this.prisma.location.update({
+        data,
+        where,
+      });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Location with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 
-  async remove(
-    where: Prisma.LocationWhereUniqueInput,
-  ): Promise<Location | null> {
-    return this.prisma.location.delete({ where });
+  async remove(where: Prisma.LocationWhereUniqueInput): Promise<Location> {
+    try {
+      return await this.prisma.location.delete({ where });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Location with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 }

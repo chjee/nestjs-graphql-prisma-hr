@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Department, Prisma } from '@prisma/client';
 
@@ -29,14 +29,7 @@ export class DepartmentsService {
   }
 
   async findOne(where: Prisma.DepartmentWhereUniqueInput): Promise<Department> {
-    const department = await this.prisma.department.findUnique({ where });
-
-    if (!department) {
-      this.logger.error(`Department with id(${where.id}) not found`);
-      throw new NotFoundException();
-    }
-
-    return department;
+    return this.prisma.department.findUnique({ where });
   }
 
   async update(params: {
@@ -44,13 +37,29 @@ export class DepartmentsService {
     data: Prisma.DepartmentUpdateInput;
   }): Promise<Department> {
     const { where, data } = params;
-    return this.prisma.department.update({
-      data,
-      where,
-    });
+    try {
+      return await this.prisma.department.update({
+        data,
+        where,
+      });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Department with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 
-  async remove(where: Prisma.DepartmentWhereUniqueInput): Promise<any> {
-    return this.prisma.department.delete({ where });
+  async remove(where: Prisma.DepartmentWhereUniqueInput): Promise<Department> {
+    try {
+      return await this.prisma.department.delete({ where });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Department with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 }

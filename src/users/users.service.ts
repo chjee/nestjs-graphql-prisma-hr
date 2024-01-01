@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 
@@ -29,32 +29,18 @@ export class UsersService {
   }
 
   async findOne(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+    return this.prisma.user.findUnique({
       where,
     });
-
-    if (!user) {
-      this.logger.error(`User with id ${where.id} not found`);
-      throw new NotFoundException();
-    }
-
-    return user;
   }
 
   async findUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+    return this.prisma.user.findUnique({
       include: {
         profile: true,
       },
       where,
     });
-
-    if (!user) {
-      this.logger.error(`User with id ${where.id} not found`);
-      throw new NotFoundException();
-    }
-
-    return user;
   }
 
   async update(params: {
@@ -62,15 +48,29 @@ export class UsersService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
-    return this.prisma.user.update({
-      data,
-      where,
-    });
+    try {
+      return await this.prisma.user.update({
+        data,
+        where,
+      });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`User with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 
-  async remove(where: Prisma.UserWhereUniqueInput): Promise<User | null> {
-    return this.prisma.user.delete({
-      where,
-    });
+  async remove(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    try {
+      return await this.prisma.user.delete({ where });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`User with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 }

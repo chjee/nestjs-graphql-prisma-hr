@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Job, Prisma } from '@prisma/client';
 
@@ -29,14 +29,7 @@ export class JobsService {
   }
 
   async findOne(where: Prisma.JobWhereUniqueInput): Promise<Job> {
-    const job = await this.prisma.job.findUnique({ where });
-
-    if (!job) {
-      this.logger.error(`Job with id(${where.id}) not found`);
-      throw new NotFoundException();
-    }
-
-    return job;
+    return this.prisma.job.findUnique({ where });
   }
 
   async update(params: {
@@ -44,13 +37,29 @@ export class JobsService {
     data: Prisma.JobUpdateInput;
   }): Promise<Job> {
     const { where, data } = params;
-    return this.prisma.job.update({
-      data,
-      where,
-    });
+    try {
+      return await this.prisma.job.update({
+        data,
+        where,
+      });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Job with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 
-  async remove(where: Prisma.JobWhereUniqueInput): Promise<Job | null> {
-    return this.prisma.job.delete({ where });
+  async remove(where: Prisma.JobWhereUniqueInput): Promise<Job> {
+    try {
+      return await this.prisma.job.delete({ where });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Job with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 }

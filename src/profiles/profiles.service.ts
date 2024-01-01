@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Profile } from '@prisma/client';
 
@@ -29,16 +29,9 @@ export class ProfilesService {
   }
 
   async findOne(where: Prisma.ProfileWhereUniqueInput): Promise<Profile> {
-    const profile = await this.prisma.profile.findUnique({
+    return this.prisma.profile.findUnique({
       where,
     });
-
-    if (!profile) {
-      this.logger.error(`Profile with id ${where.id} not found`);
-      throw new NotFoundException();
-    }
-
-    return profile;
   }
 
   async update(params: {
@@ -46,15 +39,29 @@ export class ProfilesService {
     data: Prisma.ProfileUpdateInput;
   }): Promise<Profile> {
     const { where, data } = params;
-    return this.prisma.profile.update({
-      data,
-      where,
-    });
+    try {
+      return await this.prisma.profile.update({
+        data,
+        where,
+      });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Profile with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 
-  async remove(where: Prisma.ProfileWhereUniqueInput): Promise<Profile | null> {
-    return this.prisma.profile.delete({
-      where,
-    });
+  async remove(where: Prisma.ProfileWhereUniqueInput): Promise<Profile> {
+    try {
+      return await this.prisma.profile.delete({ where });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Profile with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Country, Prisma } from '@prisma/client';
 
@@ -29,14 +29,7 @@ export class CountriesService {
   }
 
   async findOne(where: Prisma.CountryWhereUniqueInput): Promise<Country> {
-    const country = await this.prisma.country.findUnique({ where });
-
-    if (!country) {
-      this.logger.error(`Country with id(${where.id}) not found`);
-      throw new NotFoundException();
-    }
-
-    return country;
+    return this.prisma.country.findUnique({ where });
   }
 
   async update(params: {
@@ -44,13 +37,29 @@ export class CountriesService {
     data: Prisma.CountryUpdateInput;
   }): Promise<Country> {
     const { where, data } = params;
-    return this.prisma.country.update({
-      data,
-      where,
-    });
+    try {
+      return await this.prisma.country.update({
+        data,
+        where,
+      });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Region with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 
-  async remove(where: Prisma.CountryWhereUniqueInput): Promise<Country | null> {
-    return this.prisma.country.delete({ where });
+  async remove(where: Prisma.CountryWhereUniqueInput): Promise<Country> {
+    try {
+      return await this.prisma.country.delete({ where });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          this.logger.log(`Region with id(${where.id}) not found`);
+        }
+      }
+    }
   }
 }
