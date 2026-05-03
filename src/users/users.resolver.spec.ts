@@ -57,6 +57,14 @@ describe('UsersResolver', () => {
       expect(await usersResolver.profile(user)).toBe(profileWithDifferentId);
       expect(findOneSpy).toHaveBeenCalledWith({ userId: user.id });
     });
+
+    it('should return null when user has no profile', async () => {
+      jest
+        .spyOn(profilesService, 'findOne')
+        .mockImplementation(async () => null);
+
+      await expect(usersResolver.profile(user)).resolves.toBeNull();
+    });
   });
 
   describe('update', () => {

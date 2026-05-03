@@ -16,7 +16,7 @@ export class Employee {
   id: number;
 
   @Field(() => String, { nullable: true, description: 'Employee first name' })
-  firstName?: string;
+  firstName?: string | null;
 
   @Field(() => String, { description: 'Employee last name' })
   lastName: string;
@@ -55,7 +55,7 @@ export class Employee {
   department?: Department | null;
 
   @Field(() => Employee, { nullable: true, description: 'Employee manager ID' })
-  manager?: Employee;
+  manager?: Employee | null;
 
   @Field(() => [Employee], {
     nullable: true,

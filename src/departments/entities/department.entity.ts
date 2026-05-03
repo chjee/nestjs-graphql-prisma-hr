@@ -21,13 +21,13 @@ export class Department {
     nullable: true,
     description: 'Department manager',
   })
-  manager?: Employee;
+  manager?: Employee | null;
 
   @Field(() => Location, {
     nullable: true,
     description: 'Department location',
   })
-  location?: Location;
+  location?: Location | null;
 
   @Field(() => [Employee], {
     nullable: true,

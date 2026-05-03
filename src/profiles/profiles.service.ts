@@ -29,7 +29,9 @@ export class ProfilesService {
     });
   }
 
-  async findOne(where: Prisma.ProfileWhereUniqueInput): Promise<Profile> {
+  async findOne(
+    where: Prisma.ProfileWhereUniqueInput,
+  ): Promise<Profile | null> {
     return this.prisma.profile.findUnique({
       where,
     });
