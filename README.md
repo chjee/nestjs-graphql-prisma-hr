@@ -49,6 +49,9 @@ $ npm run test:cov
 # mocked resolver e2e tests under test/*.e2e-spec.ts
 $ npm run test:e2e
 
+# DB-backed release-gate e2e tests against a migrated and seeded MySQL database
+$ npm run test:e2e:db
+
 # production build
 $ npm run build
 
@@ -75,9 +78,29 @@ $ npx eslint "{src,apps,libs,test}/**/*.ts"
   through `test/e2e-test-utils.ts`, so they do not require `DATABASE_URL` or a
   running MySQL instance. They verify GraphQL/resolver wiring and request
   bootstrap behavior, not real database persistence.
-- Real database-backed e2e coverage is not part of the current default test
-  profile. Add a separate profile or explicit setup before asserting Prisma/MySQL
-  integration behavior end to end.
+- `npm run test:e2e:db` runs `test/*.db-e2e.ts` against the real
+  `AppModule`, real `PrismaService`, and the `DATABASE_URL` MySQL database. It
+  does not mock domain services or Prisma. This profile is intended as an
+  explicit release gate for Prisma/MySQL integration behavior.
+
+### DB-backed e2e profile
+
+The DB-backed profile requires a dedicated, migrated, and seeded MySQL database.
+Do not point this command at a shared production database because the test creates
+and removes a temporary user.
+
+```sh
+# example setup for a disposable database
+$ export DATABASE_URL="mysql://root:password@127.0.0.1:3306/hrms_e2e"
+$ export JWT_SECRET="test-secret"
+$ npx prisma migrate deploy
+$ npx prisma db seed
+$ npm run test:e2e:db
+```
+
+The DB-backed test logs in with the seeded `alice@prisma.io` account, runs
+protected GraphQL operations with a real JWT, verifies real user persistence, and
+asserts that passwords are not exposed in GraphQL responses.
 
 ### GraphQL schema snapshot
 

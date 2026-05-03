@@ -44,6 +44,7 @@ it does not change runtime behavior.
 | Bounded list queries              | Done   | `src/common/utils/query-policy.util.ts`, `src/common/utils/prisma-query-policy-services.spec.ts`, relation resolver specs.                                                                  |
 | Production bootstrap validation   | Done   | `src/configure-app.ts`, `src/main.ts`, `src/configure-app.spec.ts`, e2e init helper.                                                                                                        |
 | Mocked e2e default profile        | Done   | `test/e2e-test-utils.ts`, `test/jest-e2e.setup.ts`, resolver e2e suites.                                                                                                                    |
+| DB-backed e2e release gate        | Done   | `test/database.db-e2e.ts`, `test/jest-e2e-db.json`, `test/jest-e2e-db.setup.ts`, `npm run test:e2e:db`.                                                                                     |
 | GraphQL schema contract           | Done   | `src/common/graphql-schema-contract.spec.ts`, `src/common/__snapshots__/graphql-schema-contract.spec.ts.snap`.                                                                              |
 | Test/profile documentation        | Done   | `README.md`.                                                                                                                                                                                |
 
@@ -55,6 +56,7 @@ The final documentation branch was verified with:
 - `git diff --check`
 - `npm test -- --runInBand`
 - `npm run test:e2e -- --runInBand`
+- `npm run test:e2e:db` against a migrated and seeded disposable MySQL database
 - `npx tsc --noEmit --pretty false`
 - `npm run build`
 - `npx eslint "{src,apps,libs,test}/**/*.ts"`
@@ -64,13 +66,13 @@ Latest verification evidence for this report:
 
 - Unit/schema suites: 29 suites, 209 tests, 1 snapshot passed.
 - Mocked e2e suites: 9 suites, 45 tests passed.
+- DB-backed e2e release gate: 1 suite, 2 tests passed.
 
 ## Known gaps and release risks
 
-- Real database-backed e2e coverage is still intentionally outside the default mocked
-  profile. Before a production release or `develop` -> `main` promotion, run a
-  seeded MySQL/Prisma integration profile or create a dedicated DB-backed e2e
-  workflow.
+- Real database-backed e2e coverage is now available as an explicit release-gate
+  profile through `npm run test:e2e:db`, but it still requires a migrated and
+  seeded disposable MySQL database.
 - The GraphQL schema snapshot is generated from Nest resolver metadata. It protects
   the public schema contract, but it does not prove database behavior.
 - Coverage thresholds are not enforced by this report. If coverage becomes a release
@@ -79,8 +81,7 @@ Latest verification evidence for this report:
 
 ## Remaining release decisions
 
-1. Decide whether `develop` is ready for a `main` promotion.
-2. If release confidence requires database behavior evidence, add or run a seeded
-   DB-backed e2e lane before promoting `develop` to `main`.
-3. If coverage becomes a release gate, run `npm run test:cov -- --runInBand` and
-   record the result in a follow-up report or release note.
+1. Promote `develop` to `main` after review because the DB-backed e2e release
+   gate has passed against a disposable MySQL database.
+2. If coverage becomes a future release gate, run `npm run test:cov -- --runInBand`
+   and record the result in a follow-up report or release note.
