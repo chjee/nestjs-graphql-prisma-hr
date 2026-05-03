@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Location, Prisma } from '@prisma/client';
 import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
+import { withListQueryPolicy } from '../common/utils/query-policy.util';
 
 @Injectable()
 export class LocationsService {
@@ -19,13 +20,16 @@ export class LocationsService {
     where?: Prisma.LocationWhereInput;
     orderBy?: Prisma.LocationOrderByWithRelationInput;
   }): Promise<Location[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const query = withListQueryPolicy(params, {
+      id: 'asc',
+    } satisfies Prisma.LocationOrderByWithRelationInput);
+
     return this.prisma.location.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      skip: query.skip,
+      take: query.take,
+      cursor: query.cursor,
+      where: query.where,
+      orderBy: query.orderBy,
     });
   }
 

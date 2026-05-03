@@ -66,7 +66,7 @@ describe('UsersService', () => {
         take: 3,
         cursor: undefined,
         where: undefined,
-        orderBy: undefined,
+        orderBy: { id: 'asc' },
       });
     });
   });

@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 import { hashPassword } from '../common/utils/password.util';
 import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
+import { withListQueryPolicy } from '../common/utils/query-policy.util';
 
 @Injectable()
 export class UsersService {
@@ -25,13 +26,16 @@ export class UsersService {
     where?: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<User[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const query = withListQueryPolicy(params, {
+      id: 'asc',
+    } satisfies Prisma.UserOrderByWithRelationInput);
+
     return this.prisma.user.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      skip: query.skip,
+      take: query.take,
+      cursor: query.cursor,
+      where: query.where,
+      orderBy: query.orderBy,
     });
   }
 
