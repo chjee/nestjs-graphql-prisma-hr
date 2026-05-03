@@ -111,27 +111,46 @@ describe('JobhistoriesResolver', () => {
 
   describe('update', () => {
     it('should update a jobhistory', async () => {
-      jest
+      const startedAt = new Date('2001-09-17T00:00:00.000Z');
+      const updateSpy = jest
         .spyOn(jobhistoriesService, 'update')
         .mockImplementation(async () => jobHistory);
+
       expect(
         await jobhistoriesResolver.updateJobhistory(
           102,
-          new Date(),
+          startedAt,
           updateJobHistoryInput,
         ),
       ).toBe(jobHistory);
+      expect(updateSpy).toHaveBeenCalledWith({
+        where: {
+          employeeId_startedAt: {
+            employeeId: 102,
+            startedAt,
+          },
+        },
+        data: updateJobHistoryInput,
+      });
     });
   });
 
   describe('remove', () => {
     it('should remove a jobhistory', async () => {
-      jest
+      const startedAt = new Date('2001-09-17T00:00:00.000Z');
+      const removeSpy = jest
         .spyOn(jobhistoriesService, 'remove')
         .mockImplementation(async () => jobHistory);
-      expect(await jobhistoriesResolver.removeJobhistory(100, new Date())).toBe(
+
+      expect(await jobhistoriesResolver.removeJobhistory(100, startedAt)).toBe(
         jobHistory,
       );
+      expect(removeSpy).toHaveBeenCalledWith({
+        employeeId_startedAt: {
+          employeeId: 100,
+          startedAt,
+        },
+      });
     });
   });
 });
