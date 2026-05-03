@@ -37,7 +37,7 @@ $ npm run start:prod
 ## Run tests
 
 ```sh
-# unit tests
+# unit and contract tests under src/**/*.spec.ts
 $ npm run test
 
 # unit tests with watch mode
@@ -46,9 +46,68 @@ $ npm run test:watch
 # unit tests with coverage
 $ npm run test:cov
 
-# e2e tests
+# mocked resolver e2e tests under test/*.e2e-spec.ts
 $ npm run test:e2e
+
+# production build
+$ npm run build
+
+# typecheck without emitting files
+$ npx tsc --noEmit --pretty false
+
+# eslint check; note package script runs eslint with --fix
+$ npx eslint "{src,apps,libs,test}/**/*.ts"
 ```
+
+### Test scope
+
+- `npm run test` runs Jest with `rootDir: src`. It includes unit tests and
+  contract tests such as:
+  - `src/common/graphql-schema-contract.spec.ts` for the public GraphQL schema
+    snapshot and high-risk schema assertions.
+  - `src/common/nullability-contract.spec.ts` for Prisma-backed GraphQL and DTO
+    nullability expectations.
+  - `src/common/utils/prisma-mutation-services.spec.ts` and
+    `src/common/utils/prisma-query-policy-services.spec.ts` for cross-service
+    Prisma behavior.
+- `npm run test:e2e` runs the resolver e2e specs in `test/*.e2e-spec.ts`. These
+  tests intentionally use mocked domain services plus a mocked `PrismaService`
+  through `test/e2e-test-utils.ts`, so they do not require `DATABASE_URL` or a
+  running MySQL instance. They verify GraphQL/resolver wiring and request
+  bootstrap behavior, not real database persistence.
+- Real database-backed e2e coverage is not part of the current default test
+  profile. Add a separate profile or explicit setup before asserting Prisma/MySQL
+  integration behavior end to end.
+
+### GraphQL schema snapshot
+
+The committed GraphQL schema snapshot lives at:
+
+```text
+src/common/__snapshots__/graphql-schema-contract.spec.ts.snap
+```
+
+Use it as a schema-diff gate when changing public GraphQL contracts:
+
+```sh
+# run the schema contract test
+$ npm test -- --runInBand src/common/graphql-schema-contract.spec.ts
+
+# intentionally update the snapshot after reviewing the schema diff
+$ npm test -- --runInBand src/common/graphql-schema-contract.spec.ts -u
+```
+
+The schema contract test builds the resolver schema without starting the
+database-backed `AppModule`. It snapshots a lexicographically sorted schema and
+asserts key contracts directly, including:
+
+- `User.password` is not exposed on the public `User` object type.
+- `loginUser` remains present as the auth mutation entrypoint.
+- Top-level list queries expose `skip` and `take`.
+- Relation list fields expose `skip` and `take`.
+
+Update the snapshot only when the GraphQL contract change is intentional and the
+diff has been reviewed.
 
 ## Other commands
 
