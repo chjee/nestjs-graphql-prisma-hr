@@ -2,6 +2,7 @@ import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
+import { applyAppConfig } from '../src/configure-app';
 import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
 import { UsersService } from '../src/users/users.service';
 
@@ -33,6 +34,7 @@ describe('UsersResolver (e2e)', () => {
       .compile();
 
     app = moduleRef.createNestApplication();
+    applyAppConfig(app);
     await app.init();
   });
 
