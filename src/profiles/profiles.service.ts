@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Profile } from '@prisma/client';
+import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
 
 @Injectable()
 export class ProfilesService {
@@ -45,11 +46,7 @@ export class ProfilesService {
         where,
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Profile with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Profile', where, this.logger);
     }
   }
 
@@ -57,11 +54,7 @@ export class ProfilesService {
     try {
       return await this.prisma.profile.delete({ where });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Profile with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Profile', where, this.logger);
     }
   }
 }

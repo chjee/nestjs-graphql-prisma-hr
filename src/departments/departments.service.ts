@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Department, Prisma } from '@prisma/client';
+import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
 
 @Injectable()
 export class DepartmentsService {
@@ -43,11 +44,7 @@ export class DepartmentsService {
         where,
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Department with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Department', where, this.logger);
     }
   }
 
@@ -55,11 +52,7 @@ export class DepartmentsService {
     try {
       return await this.prisma.department.delete({ where });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Department with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Department', where, this.logger);
     }
   }
 }

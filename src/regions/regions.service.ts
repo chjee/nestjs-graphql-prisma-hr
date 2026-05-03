@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Region } from '@prisma/client';
+import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
 
 @Injectable()
 export class RegionsService {
@@ -43,11 +44,7 @@ export class RegionsService {
         where,
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Region with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Region', where, this.logger);
     }
   }
 
@@ -55,11 +52,7 @@ export class RegionsService {
     try {
       return await this.prisma.region.delete({ where });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Region with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Region', where, this.logger);
     }
   }
 }

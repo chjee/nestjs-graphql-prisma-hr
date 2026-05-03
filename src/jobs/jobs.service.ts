@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Job, Prisma } from '@prisma/client';
+import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
 
 @Injectable()
 export class JobsService {
@@ -43,11 +44,7 @@ export class JobsService {
         where,
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Job with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Job', where, this.logger);
     }
   }
 
@@ -55,11 +52,7 @@ export class JobsService {
     try {
       return await this.prisma.job.delete({ where });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Job with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Job', where, this.logger);
     }
   }
 }
