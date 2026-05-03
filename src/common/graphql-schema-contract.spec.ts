@@ -10,6 +10,7 @@ import {
   lexicographicSortSchema,
   printSchema,
 } from 'graphql';
+import { AuthResolver } from '../auth/auth.resolver';
 import { CountriesResolver } from '../countries/countries.resolver';
 import { DepartmentsResolver } from '../departments/departments.resolver';
 import { EmployeesResolver } from '../employees/employees.resolver';
@@ -22,6 +23,7 @@ import { UsersResolver } from '../users/users.resolver';
 import { DateScalar } from './scalars/date.scalar';
 
 const schemaResolvers = [
+  AuthResolver,
   CountriesResolver,
   DepartmentsResolver,
   EmployeesResolver,
@@ -76,7 +78,12 @@ describe('GraphQL schema contract', () => {
   });
 
   it('keeps list query pagination args visible in the schema', () => {
+    const mutationFields = getObjectType(schema, 'Mutation').getFields();
     const queryFields = getObjectType(schema, 'Query').getFields();
+
+    expect(mutationFields.loginUser.args.map((arg) => arg.name)).toEqual([
+      'signInInput',
+    ]);
 
     for (const fieldName of [
       'getCountries',

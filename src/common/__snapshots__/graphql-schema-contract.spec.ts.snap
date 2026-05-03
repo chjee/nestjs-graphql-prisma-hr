@@ -339,6 +339,7 @@ type Mutation {
   createProfile(createProfileInput: CreateProfileInput!): Profile!
   createRegion(createRegionInput: CreateRegionInput!): Region!
   createUser(createUserInput: CreateUserInput!): User!
+  loginUser(signInInput: SignInInput!): SignInOutput!
   removeCountry(id: String!): Country
   removeDepartment(id: Int!): Department
   removeEmployee(id: Int!): Employee
@@ -405,6 +406,21 @@ type Region {
 
   """Region name"""
   name: String
+}
+
+"""Sign in user input"""
+input SignInInput {
+  """User email"""
+  email: String!
+
+  """User password"""
+  password: String!
+}
+
+"""Sign In Output"""
+type SignInOutput {
+  """JWT Token"""
+  token: String
 }
 
 """Update country input"""
