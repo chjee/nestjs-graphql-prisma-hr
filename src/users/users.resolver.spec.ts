@@ -48,11 +48,14 @@ describe('UsersResolver', () => {
   });
 
   describe('profile', () => {
-    it('should return a profile', async () => {
-      jest
+    it('should resolve profile by userId instead of profile id', async () => {
+      const profileWithDifferentId = { ...profile, id: 99, userId: user.id };
+      const findOneSpy = jest
         .spyOn(profilesService, 'findOne')
-        .mockImplementation(async () => profile);
-      expect(await usersResolver.profile(user)).toBe(profile);
+        .mockImplementation(async () => profileWithDifferentId);
+
+      expect(await usersResolver.profile(user)).toBe(profileWithDifferentId);
+      expect(findOneSpy).toHaveBeenCalledWith({ userId: user.id });
     });
   });
 

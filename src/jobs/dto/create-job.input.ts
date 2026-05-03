@@ -1,6 +1,13 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { Decimal } from '@prisma/client/runtime/library';
-import { IsNotEmpty, IsNumber, Length, Max, Min } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  Length,
+  Max,
+  Min,
+} from 'class-validator';
 
 @InputType({ description: 'Create job input' })
 export class CreateJobInput {
@@ -15,13 +22,16 @@ export class CreateJobInput {
   title: string;
 
   @Field(() => Int, { nullable: true, description: 'Minimum salary' })
+  @IsOptional()
   @IsNumber()
   @Min(0)
   @Max(99999999)
-  minSalary: Decimal;
+  minSalary?: Decimal | null;
 
   @Field(() => Int, { nullable: true, description: 'Maximum salary' })
+  @IsOptional()
+  @IsNumber()
   @Min(0)
   @Max(99999999)
-  maxSalary: Decimal;
+  maxSalary?: Decimal | null;
 }

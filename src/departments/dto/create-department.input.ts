@@ -1,5 +1,12 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsNotEmpty, IsInt, Min, IsString, Length } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsInt,
+  Min,
+  IsString,
+  Length,
+  IsOptional,
+} from 'class-validator';
 
 @InputType({ description: 'Create department input' })
 export class CreateDepartmentInput {
@@ -15,13 +22,15 @@ export class CreateDepartmentInput {
   @Length(2, 30)
   name: string;
 
-  @Field(() => Int, { description: 'Department manager ID' })
+  @Field(() => Int, { nullable: true, description: 'Department manager ID' })
+  @IsOptional()
   @IsInt()
   @Min(1)
-  managerId: number;
+  managerId?: number | null;
 
-  @Field(() => Int, { description: 'Department location ID' })
+  @Field(() => Int, { nullable: true, description: 'Department location ID' })
+  @IsOptional()
   @IsInt()
   @Min(1)
-  locationId: number;
+  locationId?: number | null;
 }

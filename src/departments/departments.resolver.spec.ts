@@ -80,6 +80,15 @@ describe('DepartmentsResolver', () => {
         .mockImplementation(async () => location);
       expect(await departmentsResolver.location(department)).toBe(location);
     });
+
+    it('should return null without lookup when locationId is null', async () => {
+      const findOneSpy = jest.spyOn(locationsService, 'findOne');
+
+      expect(
+        await departmentsResolver.location({ ...department, locationId: null }),
+      ).toBeNull();
+      expect(findOneSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('manager', () => {
@@ -88,6 +97,15 @@ describe('DepartmentsResolver', () => {
         .spyOn(employeesService, 'findOne')
         .mockImplementation(async () => employee);
       expect(await departmentsResolver.manager(department)).toBe(employee);
+    });
+
+    it('should return null without lookup when managerId is null', async () => {
+      const findOneSpy = jest.spyOn(employeesService, 'findOne');
+
+      expect(
+        await departmentsResolver.manager({ ...department, managerId: null }),
+      ).toBeNull();
+      expect(findOneSpy).not.toHaveBeenCalled();
     });
   });
 

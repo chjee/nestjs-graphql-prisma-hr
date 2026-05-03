@@ -53,12 +53,22 @@ export class DepartmentsResolver {
   }
 
   @ResolveField()
-  async location(@Parent() { locationId }: Department): Promise<Location> {
+  async location(
+    @Parent() { locationId }: Department,
+  ): Promise<Location | null> {
+    if (locationId == null) {
+      return null;
+    }
+
     return this.locationsService.findOne({ id: locationId });
   }
 
   @ResolveField()
-  async manager(@Parent() { managerId }: Department): Promise<Employee> {
+  async manager(@Parent() { managerId }: Department): Promise<Employee | null> {
+    if (managerId == null) {
+      return null;
+    }
+
     return this.employeesService.findOne({ id: managerId });
   }
 

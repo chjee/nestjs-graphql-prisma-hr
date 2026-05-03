@@ -11,6 +11,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Length,
   Min,
@@ -25,9 +26,10 @@ export class CreateEmployeeInput {
   id: number;
 
   @Field(() => String, { nullable: true, description: 'Employee first name' })
+  @IsOptional()
   @IsString()
   @Length(2, 20)
-  firstName?: string;
+  firstName?: string | null;
 
   @Field(() => String, { description: 'Employee last name' })
   @IsNotEmpty()
@@ -42,6 +44,7 @@ export class CreateEmployeeInput {
   email: string;
 
   @Field(() => String, { nullable: true, description: 'Employee phone number' })
+  @IsOptional()
   @IsString()
   @Length(2, 20)
   phone?: string | null;
@@ -63,14 +66,19 @@ export class CreateEmployeeInput {
   salary: number;
 
   @Field(() => Float, { nullable: true, description: 'Employee commission' })
+  @IsOptional()
   @IsNumber()
   commissionPct?: number | null;
 
-  @Field(() => Int, { description: 'Employee manager ID' })
-  @IsNumber()
-  managerId?: number;
+  @Field(() => Int, { nullable: true, description: 'Employee manager ID' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  managerId?: number | null;
 
-  @Field(() => Int, { description: 'Employee department ID' })
-  @IsNumber()
-  departmentId?: number;
+  @Field(() => Int, { nullable: true, description: 'Employee department ID' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  departmentId?: number | null;
 }

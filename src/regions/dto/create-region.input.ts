@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsInt, IsNotEmpty, Length, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
 
 @InputType({ description: 'Create region input' })
 export class CreateRegionInput {
@@ -9,8 +9,8 @@ export class CreateRegionInput {
   @Min(1)
   id: number;
 
-  @Field(() => String, { description: 'Region name' })
-  @IsNotEmpty()
+  @Field(() => String, { nullable: true, description: 'Region name' })
+  @IsOptional()
   @Length(3, 25)
-  name: string;
+  name?: string | null;
 }

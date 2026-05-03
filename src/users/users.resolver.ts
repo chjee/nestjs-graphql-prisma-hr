@@ -45,8 +45,8 @@ export class UsersResolver {
   }
 
   @ResolveField()
-  async profile(@Parent() { id }: User): Promise<Profile> {
-    return this.profilesService.findOne({ id: id });
+  async profile(@Parent() { id }: User): Promise<Profile | null> {
+    return this.profilesService.findOne({ userId: id });
   }
 
   @Mutation(() => User, { nullable: true, name: 'updateUser' })

@@ -8,16 +8,16 @@ export class Location {
   id: number;
 
   @Field(() => String, { nullable: true, description: 'Street address' })
-  streetAddress?: string;
+  streetAddress?: string | null;
 
   @Field(() => String, { nullable: true, description: 'Postal code' })
-  postalCode?: string;
+  postalCode?: string | null;
 
   @Field(() => String, { description: 'City' })
   city: string;
 
   @Field(() => String, { nullable: true, description: 'State province' })
-  stateProvince?: string;
+  stateProvince?: string | null;
 
   @Field(() => String, { description: 'Country ID' })
   countryId: string;

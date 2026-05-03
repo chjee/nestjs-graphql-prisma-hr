@@ -85,6 +85,33 @@ describe('EmployeesResolver', () => {
         .mockImplementation(async () => department);
       expect(await employeesResolver.department(employee)).toBe(department);
     });
+
+    it('should return null without lookup when departmentId is null', async () => {
+      const findOneSpy = jest.spyOn(departmentsService, 'findOne');
+
+      expect(
+        await employeesResolver.department({ ...employee, departmentId: null }),
+      ).toBeNull();
+      expect(findOneSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('manager', () => {
+    it('should return an employee manager', async () => {
+      jest
+        .spyOn(employeesService, 'findOne')
+        .mockImplementation(async () => employee);
+      expect(await employeesResolver.manager(employee)).toBe(employee);
+    });
+
+    it('should return null without lookup when managerId is null', async () => {
+      const findOneSpy = jest.spyOn(employeesService, 'findOne');
+
+      expect(
+        await employeesResolver.manager({ ...employee, managerId: null }),
+      ).toBeNull();
+      expect(findOneSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('otherEmployees', () => {
