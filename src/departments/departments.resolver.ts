@@ -73,13 +73,29 @@ export class DepartmentsResolver {
   }
 
   @ResolveField()
-  async employees(@Parent() { id }: Department): Promise<Employee[]> {
-    return this.employeesService.findAll({ where: { departmentId: id } });
+  async employees(
+    @Parent() { id }: Department,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+  ): Promise<Employee[]> {
+    return this.employeesService.findAll({
+      skip,
+      take,
+      where: { departmentId: id },
+    });
   }
 
   @ResolveField()
-  async jobhistories(@Parent() { id }: Department): Promise<Jobhistory[]> {
-    return this.jobhistoriesService.findAll({ where: { departmentId: id } });
+  async jobhistories(
+    @Parent() { id }: Department,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+  ): Promise<Jobhistory[]> {
+    return this.jobhistoriesService.findAll({
+      skip,
+      take,
+      where: { departmentId: id },
+    });
   }
 
   @Mutation(() => Department, { nullable: true, name: 'updateDepartment' })

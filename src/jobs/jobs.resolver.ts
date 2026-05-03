@@ -48,15 +48,27 @@ export class JobsResolver {
   }
 
   @ResolveField()
-  async employees(@Parent() { id }: Job): Promise<Employee[]> {
+  async employees(
+    @Parent() { id }: Job,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+  ): Promise<Employee[]> {
     return this.employeesService.findAll({
+      skip,
+      take,
       where: { jobId: id },
     });
   }
 
   @ResolveField()
-  async jobHistories(@Parent() { id }: Job): Promise<Jobhistory[]> {
+  async jobHistories(
+    @Parent() { id }: Job,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+  ): Promise<Jobhistory[]> {
     return this.jobhistoriesService.findAll({
+      skip,
+      take,
       where: { jobId: id },
     });
   }

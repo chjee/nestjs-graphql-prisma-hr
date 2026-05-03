@@ -78,13 +78,29 @@ export class EmployeesResolver {
   }
 
   @ResolveField()
-  async otherEmployees(@Parent() { id }: Employee): Promise<Employee[]> {
-    return this.employeesService.findAll({ where: { managerId: id } });
+  async otherEmployees(
+    @Parent() { id }: Employee,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+  ): Promise<Employee[]> {
+    return this.employeesService.findAll({
+      skip,
+      take,
+      where: { managerId: id },
+    });
   }
 
   @ResolveField()
-  async jobHistories(@Parent() { id }: Employee): Promise<Jobhistory[]> {
-    return this.jobhistoriesService.findAll({ where: { employeeId: id } });
+  async jobHistories(
+    @Parent() { id }: Employee,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+  ): Promise<Jobhistory[]> {
+    return this.jobhistoriesService.findAll({
+      skip,
+      take,
+      where: { employeeId: id },
+    });
   }
 
   @Mutation(() => Employee, { nullable: true, name: 'updateEmployee' })
