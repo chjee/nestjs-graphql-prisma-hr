@@ -65,12 +65,20 @@ describe('JobhistoriesResolver', () => {
 
   describe('findOne', () => {
     it('should return a jobhistory by id', async () => {
-      jest
+      const startedAt = new Date('2001-09-17T00:00:00.000Z');
+      const findOneSpy = jest
         .spyOn(jobhistoriesService, 'findOne')
         .mockImplementation(async () => jobHistory);
-      expect(
-        await jobhistoriesResolver.findOne(100, new Date('2001-09-17')),
-      ).toBe(jobHistory);
+
+      expect(await jobhistoriesResolver.findOne(100, startedAt)).toBe(
+        jobHistory,
+      );
+      expect(findOneSpy).toHaveBeenCalledWith({
+        employeeId_startedAt: {
+          employeeId: 100,
+          startedAt,
+        },
+      });
     });
   });
 

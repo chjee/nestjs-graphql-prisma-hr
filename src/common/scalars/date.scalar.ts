@@ -3,32 +3,34 @@ import { Kind, ValueNode } from 'graphql';
 
 @Scalar('Date', () => Date)
 export class DateScalar implements CustomScalar<number, Date> {
-  description = 'Date custom scalar type';
+  description =
+    'Unix epoch seconds represented as an integer and converted to a JavaScript Date';
 
-  parseValue(value: any): Date {
-    if (typeof value === 'number') {
-      // convert incoming integer to Date
-      return new Date(value);
+  parseValue(value: unknown): Date {
+    if (typeof value !== 'number' || !Number.isInteger(value)) {
+      throw new Error(
+        'GraphQL Date scalar parser expected integer epoch seconds',
+      );
     }
-    throw new Error('GraphQL Date Scalar parser expected a `number`');
+
+    return new Date(value * 1000);
   }
 
-  serialize(value: any): number {
-    if (value instanceof Date) {
-      // convert outgoing Date to integer for JSON
-      return Number((value.getTime() / 1000).toFixed(0));
-      // return value.getTime();
+  serialize(value: unknown): number {
+    if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
+      throw new Error('GraphQL Date scalar serializer expected a valid Date');
     }
-    throw new Error('GraphQL Date Scalar serializer expected a `Date` object');
+
+    return Math.floor(value.getTime() / 1000);
   }
 
   parseLiteral(ast: ValueNode): Date {
-    if (ast.kind == Kind.INT) {
-      // convert hard-coded AST string to integer and then to Date
-      return new Date(parseInt(ast.value, 10) * 1000);
-      // return new Date(parseInt(ast.value, 10));
+    if (ast.kind !== Kind.INT) {
+      throw new Error(
+        'GraphQL Date scalar parser expected integer epoch seconds',
+      );
     }
-    // invalid hard-coded value (not an integer)
-    return null;
+
+    return new Date(parseInt(ast.value, 10) * 1000);
   }
 }
