@@ -1,15 +1,15 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { LocationsResolver } from './locations.resolver';
-import { CountriesService } from '../countries/countries.service';
-import { DepartmentsService } from '../departments/departments.service';
+import { CountriesModule } from '../countries/countries.module';
+import { DepartmentsModule } from '../departments/departments.module';
 
 @Module({
-  providers: [
-    LocationsResolver,
-    LocationsService,
-    CountriesService,
-    DepartmentsService,
+  imports: [
+    forwardRef(() => CountriesModule),
+    forwardRef(() => DepartmentsModule),
   ],
+  providers: [LocationsResolver, LocationsService],
+  exports: [LocationsService],
 })
 export class LocationsModule {}

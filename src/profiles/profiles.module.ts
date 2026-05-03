@@ -1,9 +1,11 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { ProfilesResolver } from './profiles.resolver';
-import { UsersService } from '../users/users.service';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  providers: [ProfilesResolver, ProfilesService, UsersService],
+  imports: [forwardRef(() => UsersModule)],
+  providers: [ProfilesResolver, ProfilesService],
+  exports: [ProfilesService],
 })
 export class ProfilesModule {}
