@@ -77,9 +77,10 @@ Latest verification evidence for this report:
   gate, run `npm run test:cov -- --runInBand` and record the result separately.
 - README rendering was not browser-rendered; only Markdown formatting was checked.
 
-## Recommended next steps
+## Remaining release decisions
 
-1. Run `$code-review` on this documentation-only branch.
-2. Merge `p2-remediation-final-report` into `develop` if the review is clean.
-3. Decide whether `develop` is ready for a `main` promotion or whether a DB-backed
-   e2e lane should be added first.
+1. Decide whether `develop` is ready for a `main` promotion.
+2. If release confidence requires database behavior evidence, add or run a seeded
+   DB-backed e2e lane before promoting `develop` to `main`.
+3. If coverage becomes a release gate, run `npm run test:cov -- --runInBand` and
+   record the result in a follow-up report or release note.
