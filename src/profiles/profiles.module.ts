@@ -1,9 +1,12 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { ProfilesResolver } from './profiles.resolver';
-import { UsersService } from '../users/users.service';
+import { PrismaModule } from '../prisma/prisma.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  providers: [ProfilesResolver, ProfilesService, UsersService],
+  imports: [PrismaModule, forwardRef(() => UsersModule)],
+  providers: [ProfilesResolver, ProfilesService],
+  exports: [ProfilesService],
 })
 export class ProfilesModule {}

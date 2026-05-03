@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JobHistory, Prisma } from '@prisma/client';
+import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
+import { withListQueryPolicy } from '../common/utils/query-policy.util';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -18,15 +20,21 @@ export class JobhistoriesService {
     take?: number;
     cursor?: Prisma.JobHistoryWhereUniqueInput;
     where?: Prisma.JobHistoryWhereInput;
-    orderBy?: Prisma.JobHistoryOrderByWithRelationInput;
+    orderBy?:
+      | Prisma.JobHistoryOrderByWithRelationInput
+      | Prisma.JobHistoryOrderByWithRelationInput[];
   }): Promise<JobHistory[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const query = withListQueryPolicy(params, [
+      { employeeId: 'asc' },
+      { startedAt: 'asc' },
+    ] satisfies Prisma.JobHistoryOrderByWithRelationInput[]);
+
     return this.prisma.jobHistory.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      skip: query.skip,
+      take: query.take,
+      cursor: query.cursor,
+      where: query.where,
+      orderBy: query.orderBy,
     });
   }
 
@@ -45,11 +53,7 @@ export class JobhistoriesService {
         where,
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`JobHistory with id(${where.employeeId}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'JobHistory', where, this.logger);
     }
   }
 
@@ -57,11 +61,7 @@ export class JobhistoriesService {
     try {
       return await this.prisma.jobHistory.delete({ where });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`JobHistory with id(${where.employeeId}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'JobHistory', where, this.logger);
     }
   }
 }

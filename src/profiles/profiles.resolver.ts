@@ -40,7 +40,9 @@ export class ProfilesResolver {
   }
 
   @Query(() => Profile, { nullable: true, name: 'getProfileById' })
-  async findOne(@Args('id', { type: () => Int }) id: number): Promise<Profile> {
+  async findOne(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<Profile | null> {
     return this.profilesService.findOne({ id });
   }
 

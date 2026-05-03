@@ -8,7 +8,7 @@ export class Country {
   id: string;
 
   @Field(() => String, { nullable: true, description: 'Country name' })
-  name: string;
+  name?: string | null;
 
   @Field(() => Int, { description: 'Region ID' })
   regionId: number;

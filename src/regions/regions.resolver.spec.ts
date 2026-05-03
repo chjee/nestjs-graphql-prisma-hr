@@ -62,10 +62,15 @@ describe('RegionsResolver', () => {
 
   describe('countries', () => {
     it('should return an array of countries by region id', async () => {
-      jest
+      const findAllSpy = jest
         .spyOn(countriesService, 'findAll')
         .mockImplementation(async () => countries);
-      expect(await regionsResolver.countries(region)).toBe(countries);
+      expect(await regionsResolver.countries(region, 2, 5)).toBe(countries);
+      expect(findAllSpy).toHaveBeenCalledWith({
+        skip: 2,
+        take: 5,
+        where: { regionId: region.id },
+      });
     });
   });
 

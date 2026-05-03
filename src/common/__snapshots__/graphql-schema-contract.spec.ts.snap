@@ -1,0 +1,560 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GraphQL schema contract matches the committed sorted schema snapshot 1`] = `
+""""Country object"""
+type Country {
+  """Country ID"""
+  id: String!
+
+  """Location object"""
+  locations(skip: Int, take: Int): [Location!]
+
+  """Country name"""
+  name: String
+
+  """Region object"""
+  region: Region
+
+  """Region ID"""
+  regionId: Int!
+}
+
+"""Create country input"""
+input CreateCountryInput {
+  """Country ID"""
+  id: String!
+
+  """Country name"""
+  name: String
+
+  """Region ID"""
+  regionId: Int!
+}
+
+"""Create department input"""
+input CreateDepartmentInput {
+  """Department ID"""
+  id: Int!
+
+  """Department location ID"""
+  locationId: Int
+
+  """Department manager ID"""
+  managerId: Int
+
+  """Department name"""
+  name: String!
+}
+
+"""Create employee input"""
+input CreateEmployeeInput {
+  """Employee commission"""
+  commissionPct: Float
+
+  """Employee department ID"""
+  departmentId: Int
+
+  """Employee email"""
+  email: String!
+
+  """Employee first name"""
+  firstName: String
+
+  """Employee hire date"""
+  hiredAt: DateTime!
+
+  """Employee ID"""
+  id: Int!
+
+  """Employee job ID"""
+  jobId: String!
+
+  """Employee last name"""
+  lastName: String!
+
+  """Employee manager ID"""
+  managerId: Int
+
+  """Employee phone number"""
+  phone: String
+
+  """Employee salary"""
+  salary: Float!
+}
+
+"""Create job input"""
+input CreateJobInput {
+  """Job ID"""
+  id: String!
+
+  """Maximum salary"""
+  maxSalary: Int
+
+  """Minimum salary"""
+  minSalary: Int
+
+  """Job title"""
+  title: String!
+}
+
+"""Create jobhistory input"""
+input CreateJobhistoryInput {
+  """Department ID"""
+  departmentId: Int!
+
+  """Employee ID"""
+  employeeId: Int!
+
+  """End Date"""
+  endedAt: Date!
+
+  """Job ID"""
+  jobId: String!
+
+  """Start Date"""
+  startedAt: Date!
+}
+
+"""Create location input"""
+input CreateLocationInput {
+  """City"""
+  city: String!
+
+  """Country ID"""
+  countryId: String!
+
+  """Postal code"""
+  postalCode: String
+
+  """State province"""
+  stateProvince: String
+
+  """Street address"""
+  streetAddress: String
+}
+
+"""Create Profile Input"""
+input CreateProfileInput {
+  """User Bio"""
+  bio: String!
+
+  """User ID"""
+  userId: Int!
+}
+
+"""Create region input"""
+input CreateRegionInput {
+  """Region ID)"""
+  id: Int!
+
+  """Region name"""
+  name: String
+}
+
+"""Create user input"""
+input CreateUserInput {
+  """User email"""
+  email: String!
+
+  """User name"""
+  name: String
+
+  """User password"""
+  password: String!
+
+  """User role"""
+  role: String!
+}
+
+"""
+Unix epoch seconds represented as an integer and converted to a JavaScript Date
+"""
+scalar Date
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Department object"""
+type Department {
+  """Department employees"""
+  employees(skip: Int, take: Int): [Employee!]
+
+  """Department ID"""
+  id: Int!
+
+  """Department job histories"""
+  jobhistories(skip: Int, take: Int): [Jobhistory!]
+
+  """Department location"""
+  location: Location
+
+  """Department location ID"""
+  locationId: Int
+
+  """Department manager"""
+  manager: Employee
+
+  """Department manager ID"""
+  managerId: Int
+
+  """Department name"""
+  name: String!
+}
+
+"""Employee object"""
+type Employee {
+  """Employee commission"""
+  commissionPct: Float
+
+  """Employee department"""
+  department: Department
+
+  """Employee department ID"""
+  departmentId: Int
+
+  """Employee email"""
+  email: String!
+
+  """Employee first name"""
+  firstName: String
+
+  """Employee hire date"""
+  hiredAt: DateTime!
+
+  """Employee ID"""
+  id: Int!
+
+  """Employee job"""
+  job: Job
+
+  """Employee job histories"""
+  jobHistories(skip: Int, take: Int): [Jobhistory!]
+
+  """Employee job ID"""
+  jobId: String!
+
+  """Employee last name"""
+  lastName: String!
+
+  """Employee manager ID"""
+  manager: Employee
+
+  """Employee manager ID"""
+  managerId: Int
+
+  """Employee colleagues"""
+  otherEmployees(skip: Int, take: Int): [Employee!]
+
+  """Employee phone number"""
+  phone: String
+
+  """Employee salary"""
+  salary: Float!
+}
+
+"""Job object"""
+type Job {
+  """Department ID"""
+  employees(skip: Int, take: Int): [Employee!]
+
+  """Job ID"""
+  id: String!
+
+  """Job histories"""
+  jobHistories(skip: Int, take: Int): [Jobhistory!]
+
+  """Maximum salary"""
+  maxSalary: Float
+
+  """Minimum salary"""
+  minSalary: Float
+
+  """Job title"""
+  title: String!
+}
+
+"""Jobhistory Object"""
+type Jobhistory {
+  """Department object"""
+  department: Department
+
+  """Department ID"""
+  departmentId: Int!
+
+  """Employee object"""
+  employee: Employee
+
+  """Employee ID"""
+  employeeId: Int!
+
+  """End Date"""
+  endedAt: Date!
+
+  """Job object"""
+  job: Job
+
+  """Job ID"""
+  jobId: String!
+
+  """Start Date"""
+  startedAt: Date!
+}
+
+"""Location object"""
+type Location {
+  """City"""
+  city: String!
+
+  """Country object"""
+  country: Country
+
+  """Country ID"""
+  countryId: String!
+
+  """Department object"""
+  departments(skip: Int, take: Int): [Department!]
+
+  """Location ID"""
+  id: Int!
+
+  """Postal code"""
+  postalCode: String
+
+  """State province"""
+  stateProvince: String
+
+  """Street address"""
+  streetAddress: String
+}
+
+type Mutation {
+  createCountry(createCountryInput: CreateCountryInput!): Country!
+  createDepartment(createDepartmentInput: CreateDepartmentInput!): Department!
+  createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
+  createJob(createJobInput: CreateJobInput!): Job!
+  createJobhistory(createJobhistoryInput: CreateJobhistoryInput!): Jobhistory!
+  createLocation(createLocationInput: CreateLocationInput!): Location!
+  createProfile(createProfileInput: CreateProfileInput!): Profile!
+  createRegion(createRegionInput: CreateRegionInput!): Region!
+  createUser(createUserInput: CreateUserInput!): User!
+  loginUser(signInInput: SignInInput!): SignInOutput!
+  removeCountry(id: String!): Country
+  removeDepartment(id: Int!): Department
+  removeEmployee(id: Int!): Employee
+  removeJob(id: String!): Job
+  removeJobhistory(employeeId: Int!, startedAt: Date!): Jobhistory
+  removeLocation(id: Int!): Location
+  removeProfile(id: Int!): Profile
+  removeRegion(id: Int!): Region
+  removeUser(id: Int!): User
+  updateCountry(id: String!, updateCountryInput: UpdateCountryInput!): Country
+  updateDepartment(id: Int!, updateDepartmentInput: UpdateDepartmentInput!): Department
+  updateEmployee(id: Int!, updateEmployeeInput: UpdateEmployeeInput!): Employee
+  updateJob(id: String!, updateJobInput: UpdateJobInput!): Job
+  updateJobhistory(employeeId: Int!, startedAt: Date!, updateJobhistoryInput: UpdateJobhistoryInput!): Jobhistory
+  updateLocation(id: Int!, updateLocationInput: UpdateLocationInput!): Location
+  updateProfile(id: Int!, updateProfileInput: UpdateProfileInput!): Profile
+  updateRegion(id: Int!, updateRegionInput: UpdateRegionInput!): Region
+  updateUser(id: Int!, updateUserInput: UpdateUserInput!): User
+}
+
+"""Profile object"""
+type Profile {
+  """User bio"""
+  bio: String!
+
+  """Profile ID"""
+  id: Int!
+
+  """User"""
+  user: User
+
+  """User ID"""
+  userId: Int!
+}
+
+type Query {
+  getCountries(skip: Int, take: Int): [Country!]!
+  getCountryById(id: String!): Country
+  getDepartmentById(id: Int!): Department
+  getDepartments(skip: Int, take: Int): [Department!]!
+  getEmployeeById(id: Int!): Employee
+  getEmployees(skip: Int, take: Int): [Employee!]!
+  getJobById(id: String!): Job
+  getJobhistories(employeeId: Int, skip: Int, take: Int): [Jobhistory!]!
+  getJobhistoryByEmployeeId(employeeId: Int!, startedAt: Date!): Jobhistory
+  getJobs(skip: Int, take: Int): [Job!]!
+  getLocationById(id: Int!): Location
+  getLocations(skip: Int, take: Int): [Location!]!
+  getProfileById(id: Int!): Profile
+  getProfiles(skip: Int, take: Int): [Profile!]!
+  getRegionById(id: Int!): Region
+  getRegions(skip: Int, take: Int): [Region!]!
+  getUserById(id: Int!): User
+  getUsers(skip: Int, take: Int): [User!]!
+}
+
+"""Region object"""
+type Region {
+  """Country name"""
+  countries(skip: Int, take: Int): [Country!]
+
+  """Region ID)"""
+  id: Int!
+
+  """Region name"""
+  name: String
+}
+
+"""Sign in user input"""
+input SignInInput {
+  """User email"""
+  email: String!
+
+  """User password"""
+  password: String!
+}
+
+"""Sign In Output"""
+type SignInOutput {
+  """JWT Token"""
+  token: String
+}
+
+"""Update country input"""
+input UpdateCountryInput {
+  """Country name"""
+  name: String
+
+  """Region ID"""
+  regionId: Int
+}
+
+"""Update department input"""
+input UpdateDepartmentInput {
+  """Department location ID"""
+  locationId: Int
+
+  """Department manager ID"""
+  managerId: Int
+
+  """Department name"""
+  name: String
+}
+
+"""Update employee input"""
+input UpdateEmployeeInput {
+  """Employee commission"""
+  commissionPct: Float
+
+  """Employee department ID"""
+  departmentId: Int
+
+  """Employee first name"""
+  firstName: String
+
+  """Employee hire date"""
+  hiredAt: DateTime
+
+  """Employee job ID"""
+  jobId: String
+
+  """Employee last name"""
+  lastName: String
+
+  """Employee manager ID"""
+  managerId: Int
+
+  """Employee phone number"""
+  phone: String
+
+  """Employee salary"""
+  salary: Float
+}
+
+"""Update job input"""
+input UpdateJobInput {
+  """Maximum salary"""
+  maxSalary: Int
+
+  """Minimum salary"""
+  minSalary: Int
+
+  """Job title"""
+  title: String
+}
+
+"""Update jobhistory input"""
+input UpdateJobhistoryInput {
+  """Department ID"""
+  departmentId: Int
+
+  """End Date"""
+  endedAt: Date
+
+  """Job ID"""
+  jobId: String
+}
+
+"""Update location input"""
+input UpdateLocationInput {
+  """City"""
+  city: String
+
+  """Country ID"""
+  countryId: String
+
+  """Postal code"""
+  postalCode: String
+
+  """State province"""
+  stateProvince: String
+
+  """Street address"""
+  streetAddress: String
+}
+
+"""Update Profile Input"""
+input UpdateProfileInput {
+  """User Bio"""
+  bio: String!
+}
+
+"""Update region input"""
+input UpdateRegionInput {
+  """Region name"""
+  name: String
+}
+
+"""Update user input"""
+input UpdateUserInput {
+  """User name"""
+  name: String
+
+  """User role"""
+  role: String
+}
+
+"""User object"""
+type User {
+  """Created date"""
+  createdAt: Date!
+
+  """User email"""
+  email: String!
+
+  """User ID"""
+  id: Int!
+
+  """User name"""
+  name: String
+
+  """User profile"""
+  profile: Profile
+
+  """User role"""
+  role: String!
+}"
+`;

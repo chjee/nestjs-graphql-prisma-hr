@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Country, Prisma } from '@prisma/client';
+import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
+import { withListQueryPolicy } from '../common/utils/query-policy.util';
 
 @Injectable()
 export class CountriesService {
@@ -18,13 +20,16 @@ export class CountriesService {
     where?: Prisma.CountryWhereInput;
     orderBy?: Prisma.CountryOrderByWithRelationInput;
   }): Promise<Country[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const query = withListQueryPolicy(params, {
+      id: 'asc',
+    } satisfies Prisma.CountryOrderByWithRelationInput);
+
     return this.prisma.country.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      skip: query.skip,
+      take: query.take,
+      cursor: query.cursor,
+      where: query.where,
+      orderBy: query.orderBy,
     });
   }
 
@@ -43,11 +48,7 @@ export class CountriesService {
         where,
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Region with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Country', where, this.logger);
     }
   }
 
@@ -55,11 +56,7 @@ export class CountriesService {
     try {
       return await this.prisma.country.delete({ where });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Region with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Country', where, this.logger);
     }
   }
 }

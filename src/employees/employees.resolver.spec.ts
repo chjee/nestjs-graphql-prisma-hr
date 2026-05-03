@@ -85,23 +85,64 @@ describe('EmployeesResolver', () => {
         .mockImplementation(async () => department);
       expect(await employeesResolver.department(employee)).toBe(department);
     });
+
+    it('should return null without lookup when departmentId is null', async () => {
+      const findOneSpy = jest.spyOn(departmentsService, 'findOne');
+
+      expect(
+        await employeesResolver.department({ ...employee, departmentId: null }),
+      ).toBeNull();
+      expect(findOneSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('manager', () => {
+    it('should return an employee manager', async () => {
+      jest
+        .spyOn(employeesService, 'findOne')
+        .mockImplementation(async () => employee);
+      expect(await employeesResolver.manager(employee)).toBe(employee);
+    });
+
+    it('should return null without lookup when managerId is null', async () => {
+      const findOneSpy = jest.spyOn(employeesService, 'findOne');
+
+      expect(
+        await employeesResolver.manager({ ...employee, managerId: null }),
+      ).toBeNull();
+      expect(findOneSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('otherEmployees', () => {
     it('should return an array of employees', async () => {
-      jest
+      const findAllSpy = jest
         .spyOn(employeesService, 'findAll')
         .mockImplementation(async () => employees);
-      expect(await employeesResolver.otherEmployees(employee)).toBe(employees);
+      expect(await employeesResolver.otherEmployees(employee, 2, 5)).toBe(
+        employees,
+      );
+      expect(findAllSpy).toHaveBeenCalledWith({
+        skip: 2,
+        take: 5,
+        where: { managerId: employee.id },
+      });
     });
   });
 
   describe('jobHistories', () => {
     it('should return an array of jobHistories', async () => {
-      jest
+      const findAllSpy = jest
         .spyOn(jobhistoriesService, 'findAll')
         .mockImplementation(async () => jobHistories);
-      expect(await employeesResolver.jobHistories(employee)).toBe(jobHistories);
+      expect(await employeesResolver.jobHistories(employee, 2, 5)).toBe(
+        jobHistories,
+      );
+      expect(findAllSpy).toHaveBeenCalledWith({
+        skip: 2,
+        take: 5,
+        where: { employeeId: employee.id },
+      });
     });
   });
 

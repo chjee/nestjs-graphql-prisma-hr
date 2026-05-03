@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Job, Prisma } from '@prisma/client';
+import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
+import { withListQueryPolicy } from '../common/utils/query-policy.util';
 
 @Injectable()
 export class JobsService {
@@ -18,13 +20,16 @@ export class JobsService {
     where?: Prisma.JobWhereInput;
     orderBy?: Prisma.JobOrderByWithRelationInput;
   }): Promise<Job[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const query = withListQueryPolicy(params, {
+      id: 'asc',
+    } satisfies Prisma.JobOrderByWithRelationInput);
+
     return this.prisma.job.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      skip: query.skip,
+      take: query.take,
+      cursor: query.cursor,
+      where: query.where,
+      orderBy: query.orderBy,
     });
   }
 
@@ -43,11 +48,7 @@ export class JobsService {
         where,
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Job with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Job', where, this.logger);
     }
   }
 
@@ -55,11 +56,7 @@ export class JobsService {
     try {
       return await this.prisma.job.delete({ where });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Job with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Job', where, this.logger);
     }
   }
 }

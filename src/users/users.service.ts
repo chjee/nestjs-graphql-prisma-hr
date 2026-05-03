@@ -1,6 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
+import { hashPassword } from '../common/utils/password.util';
+import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
+import { withListQueryPolicy } from '../common/utils/query-policy.util';
 
 @Injectable()
 export class UsersService {
@@ -8,7 +11,12 @@ export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
   async create(data: Prisma.UserCreateInput): Promise<User> {
-    return this.prisma.user.create({ data });
+    return this.prisma.user.create({
+      data: {
+        ...data,
+        password: await hashPassword(data.password),
+      },
+    });
   }
 
   async findAll(params: {
@@ -18,13 +26,16 @@ export class UsersService {
     where?: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<User[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const query = withListQueryPolicy(params, {
+      id: 'asc',
+    } satisfies Prisma.UserOrderByWithRelationInput);
+
     return this.prisma.user.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      skip: query.skip,
+      take: query.take,
+      cursor: query.cursor,
+      where: query.where,
+      orderBy: query.orderBy,
     });
   }
 
@@ -48,17 +59,18 @@ export class UsersService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
+    const updateData = { ...data };
+    if (typeof updateData.password === 'string') {
+      updateData.password = await hashPassword(updateData.password);
+    }
+
     try {
       return await this.prisma.user.update({
-        data,
+        data: updateData,
         where,
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`User with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'User', where, this.logger);
     }
   }
 
@@ -66,11 +78,7 @@ export class UsersService {
     try {
       return await this.prisma.user.delete({ where });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`User with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'User', where, this.logger);
     }
   }
 }

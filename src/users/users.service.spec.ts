@@ -5,54 +5,107 @@ import {
   user,
   users,
   createUserInput,
-  updateUserInput,
 } from '../common/constants/jest.constants';
+import { verifyPassword } from '../common/utils/password.util';
+
+const prismaMock = {
+  user: {
+    create: jest.fn(),
+    findMany: jest.fn(),
+    findUnique: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  },
+};
 
 describe('UsersService', () => {
   let usersService: UsersService;
 
   beforeEach(async () => {
+    jest.clearAllMocks();
     const moduleRef: TestingModule = await Test.createTestingModule({
-      providers: [PrismaService, UsersService],
+      providers: [
+        UsersService,
+        {
+          provide: PrismaService,
+          useValue: prismaMock,
+        },
+      ],
     }).compile();
 
     usersService = moduleRef.get<UsersService>(UsersService);
   });
 
   describe('create', () => {
-    it('should return a user', async () => {
-      jest.spyOn(usersService, 'create').mockImplementation(async () => user);
-      expect(await usersService.create(createUserInput)).toBe(user);
+    it('hashes the password before creating a user', async () => {
+      prismaMock.user.create.mockImplementation(async ({ data }) => ({
+        ...user,
+        ...data,
+      }));
+
+      const createdUser = await usersService.create(createUserInput);
+      const prismaData = prismaMock.user.create.mock.calls[0][0].data;
+
+      expect(createdUser.password).not.toBe(createUserInput.password);
+      expect(prismaData.password).not.toBe(createUserInput.password);
+      expect(prismaData.password.length).toBeLessThanOrEqual(60);
+      await expect(
+        verifyPassword(createUserInput.password, prismaData.password),
+      ).resolves.toBe(true);
     });
   });
 
   describe('findAll', () => {
-    it('should return an array of users', async () => {
-      jest.spyOn(usersService, 'findAll').mockImplementation(async () => users);
-      expect(await usersService.findAll({ skip: 0, take: 3 })).toBe(users);
+    it('delegates to Prisma findMany', async () => {
+      prismaMock.user.findMany.mockResolvedValue(users);
+      await expect(usersService.findAll({ skip: 0, take: 3 })).resolves.toBe(
+        users,
+      );
+      expect(prismaMock.user.findMany).toHaveBeenCalledWith({
+        skip: 0,
+        take: 3,
+        cursor: undefined,
+        where: undefined,
+        orderBy: { id: 'asc' },
+      });
     });
   });
 
   describe('findOne', () => {
-    it('should return a user', async () => {
-      jest.spyOn(usersService, 'findOne').mockImplementation(async () => user);
-      expect(await usersService.findOne({ id: 1 })).toBe(user);
+    it('delegates to Prisma findUnique', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(user);
+      await expect(usersService.findOne({ id: 1 })).resolves.toBe(user);
+      expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
     });
   });
 
   describe('update', () => {
-    it('should return a user', async () => {
-      jest.spyOn(usersService, 'update').mockImplementation(async () => user);
-      expect(
-        await usersService.update({ where: { id: 1 }, data: updateUserInput }),
-      ).toBe(user);
+    it('hashes string password updates before delegating to Prisma', async () => {
+      prismaMock.user.update.mockImplementation(async ({ data }) => ({
+        ...user,
+        ...data,
+      }));
+
+      await usersService.update({
+        where: { id: 1 },
+        data: { password: 'newpass' },
+      });
+      const prismaData = prismaMock.user.update.mock.calls[0][0].data;
+
+      expect(prismaData.password).not.toBe('newpass');
+      await expect(
+        verifyPassword('newpass', prismaData.password),
+      ).resolves.toBe(true);
     });
   });
 
   describe('remove', () => {
-    it('should return a user', async () => {
-      jest.spyOn(usersService, 'remove').mockImplementation(async () => user);
-      expect(await usersService.remove({ id: 1 })).toBe(user);
+    it('delegates to Prisma delete', async () => {
+      prismaMock.user.delete.mockResolvedValue(user);
+      await expect(usersService.remove({ id: 1 })).resolves.toBe(user);
+      expect(prismaMock.user.delete).toHaveBeenCalledWith({ where: { id: 1 } });
     });
   });
 });

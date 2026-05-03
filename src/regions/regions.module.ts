@@ -1,9 +1,12 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { RegionsService } from './regions.service';
 import { RegionsResolver } from './regions.resolver';
-import { CountriesService } from '../countries/countries.service';
+import { CountriesModule } from '../countries/countries.module';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  providers: [RegionsResolver, RegionsService, CountriesService],
+  imports: [PrismaModule, forwardRef(() => CountriesModule)],
+  providers: [RegionsResolver, RegionsService],
+  exports: [RegionsService],
 })
 export class RegionsModule {}

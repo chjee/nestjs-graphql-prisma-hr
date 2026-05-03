@@ -77,10 +77,17 @@ describe('LocationsResolver', () => {
 
   describe('departments', () => {
     it('should return an array of departments by location id', async () => {
-      jest
+      const findAllSpy = jest
         .spyOn(departmentsService, 'findAll')
         .mockImplementation(async () => departments);
-      expect(await locationsResolver.departments(location)).toBe(departments);
+      expect(await locationsResolver.departments(location, 2, 5)).toBe(
+        departments,
+      );
+      expect(findAllSpy).toHaveBeenCalledWith({
+        skip: 2,
+        take: 5,
+        where: { locationId: location.id },
+      });
     });
   });
 

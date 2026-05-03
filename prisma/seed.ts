@@ -1,14 +1,15 @@
 import { PrismaClient } from '@prisma/client';
+import { hashPassword } from '../src/common/utils/password.util';
 const prisma = new PrismaClient();
 
 async function main() {
   const alice = await prisma.user.upsert({
     where: { email: 'alice@prisma.io' },
-    update: {},
+    update: { password: await hashPassword('whoami') },
     create: {
       email: 'alice@prisma.io',
       name: 'Alice',
-      password: 'whoami',
+      password: await hashPassword('whoami'),
       profile: {
         create: {
           bio: 'I like turtles',
@@ -18,11 +19,11 @@ async function main() {
   });
   const bob = await prisma.user.upsert({
     where: { email: 'bob@prisma.io' },
-    update: {},
+    update: { password: await hashPassword('whoami') },
     create: {
       email: 'bob@prisma.io',
       name: 'Bob',
-      password: 'whoami',
+      password: await hashPassword('whoami'),
       profile: {
         create: {
           bio: 'blue eyes',
@@ -32,11 +33,11 @@ async function main() {
   });
   const ariadne = await prisma.user.upsert({
     where: { email: 'ariadne@prisma.io' },
-    update: {},
+    update: { password: await hashPassword('whoami') },
     create: {
       email: 'ariadne@prisma.io',
       name: 'Ariadne',
-      password: 'whoami',
+      password: await hashPassword('whoami'),
       profile: {
         create: {
           bio: 'very smart',

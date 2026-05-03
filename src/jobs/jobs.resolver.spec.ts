@@ -60,19 +60,29 @@ describe('JobsResolver', () => {
 
   describe('employees', () => {
     it('should return an array of employees', async () => {
-      jest
+      const findAllSpy = jest
         .spyOn(employeesService, 'findAll')
         .mockImplementation(async () => employees);
-      expect(await jobsResolver.employees(job)).toBe(employees);
+      expect(await jobsResolver.employees(job, 2, 5)).toBe(employees);
+      expect(findAllSpy).toHaveBeenCalledWith({
+        skip: 2,
+        take: 5,
+        where: { jobId: job.id },
+      });
     });
   });
 
   describe('jobHistories', () => {
     it('should return an array of job histories', async () => {
-      jest
+      const findAllSpy = jest
         .spyOn(jobhistoriesService, 'findAll')
         .mockImplementation(async () => jobHistories);
-      expect(await jobsResolver.jobHistories(job)).toBe(jobHistories);
+      expect(await jobsResolver.jobHistories(job, 2, 5)).toBe(jobHistories);
+      expect(findAllSpy).toHaveBeenCalledWith({
+        skip: 2,
+        take: 5,
+        where: { jobId: job.id },
+      });
     });
   });
 

@@ -1,17 +1,19 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { JobhistoriesService } from './jobhistories.service';
 import { JobhistoriesResolver } from './jobhistories.resolver';
-import { JobsService } from '../jobs/jobs.service';
-import { DepartmentsService } from '../departments/departments.service';
-import { EmployeesService } from '../employees/employees.service';
+import { DepartmentsModule } from '../departments/departments.module';
+import { EmployeesModule } from '../employees/employees.module';
+import { JobsModule } from '../jobs/jobs.module';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  providers: [
-    JobhistoriesResolver,
-    JobhistoriesService,
-    JobsService,
-    EmployeesService,
-    DepartmentsService,
+  imports: [
+    PrismaModule,
+    forwardRef(() => JobsModule),
+    forwardRef(() => EmployeesModule),
+    forwardRef(() => DepartmentsModule),
   ],
+  providers: [JobhistoriesResolver, JobhistoriesService],
+  exports: [JobhistoriesService],
 })
 export class JobhistoriesModule {}

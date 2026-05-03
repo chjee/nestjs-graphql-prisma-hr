@@ -12,10 +12,10 @@ export class Job {
   title: string;
 
   @Field(() => Float, { nullable: true, description: 'Minimum salary' })
-  minSalary?: Decimal;
+  minSalary?: Decimal | null;
 
   @Field(() => Float, { nullable: true, description: 'Maximum salary' })
-  maxSalary?: Decimal;
+  maxSalary?: Decimal | null;
 
   @Field(() => [Employee], { nullable: true, description: 'Department ID' })
   employees?: Employee[];

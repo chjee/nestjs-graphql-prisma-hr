@@ -6,8 +6,8 @@ export class Region {
   @Field(() => Int, { description: 'Region ID)' })
   id: number;
 
-  @Field(() => String, { description: 'Region name' })
-  name: string;
+  @Field(() => String, { nullable: true, description: 'Region name' })
+  name?: string | null;
 
   @Field(() => [Country], { nullable: true, description: 'Country name' })
   countries?: Country[];

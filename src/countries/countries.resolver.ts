@@ -53,8 +53,16 @@ export class CountriesResolver {
   }
 
   @ResolveField()
-  async locations(@Parent() { id }: Country): Promise<Location[]> {
-    return this.locationsService.findAll({ where: { countryId: id } });
+  async locations(
+    @Parent() { id }: Country,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+  ): Promise<Location[]> {
+    return this.locationsService.findAll({
+      skip,
+      take,
+      where: { countryId: id },
+    });
   }
 
   @Mutation(() => Country, { nullable: true, name: 'updateCountry' })

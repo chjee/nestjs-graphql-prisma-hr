@@ -12,22 +12,22 @@ export class Department {
   name: string;
 
   @Field(() => Int, { nullable: true, description: 'Department manager ID' })
-  managerId?: number;
+  managerId?: number | null;
 
   @Field(() => Int, { nullable: true, description: 'Department location ID' })
-  locationId?: number;
+  locationId?: number | null;
 
   @Field(() => Employee, {
     nullable: true,
     description: 'Department manager',
   })
-  manager?: Employee;
+  manager?: Employee | null;
 
   @Field(() => Location, {
     nullable: true,
     description: 'Department location',
   })
-  location?: Location;
+  location?: Location | null;
 
   @Field(() => [Employee], {
     nullable: true,

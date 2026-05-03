@@ -48,11 +48,22 @@ describe('UsersResolver', () => {
   });
 
   describe('profile', () => {
-    it('should return a profile', async () => {
+    it('should resolve profile by userId instead of profile id', async () => {
+      const profileWithDifferentId = { ...profile, id: 99, userId: user.id };
+      const findOneSpy = jest
+        .spyOn(profilesService, 'findOne')
+        .mockImplementation(async () => profileWithDifferentId);
+
+      expect(await usersResolver.profile(user)).toBe(profileWithDifferentId);
+      expect(findOneSpy).toHaveBeenCalledWith({ userId: user.id });
+    });
+
+    it('should return null when user has no profile', async () => {
       jest
         .spyOn(profilesService, 'findOne')
-        .mockImplementation(async () => profile);
-      expect(await usersResolver.profile(user)).toBe(profile);
+        .mockImplementation(async () => null);
+
+      await expect(usersResolver.profile(user)).resolves.toBeNull();
     });
   });
 

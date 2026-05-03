@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Department, Prisma } from '@prisma/client';
+import { handlePrismaMutationError } from '../common/utils/prisma-error.util';
+import { withListQueryPolicy } from '../common/utils/query-policy.util';
 
 @Injectable()
 export class DepartmentsService {
@@ -18,13 +20,16 @@ export class DepartmentsService {
     where?: Prisma.DepartmentWhereInput;
     orderBy?: Prisma.DepartmentOrderByWithRelationInput;
   }): Promise<Department[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const query = withListQueryPolicy(params, {
+      id: 'asc',
+    } satisfies Prisma.DepartmentOrderByWithRelationInput);
+
     return this.prisma.department.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      skip: query.skip,
+      take: query.take,
+      cursor: query.cursor,
+      where: query.where,
+      orderBy: query.orderBy,
     });
   }
 
@@ -43,11 +48,7 @@ export class DepartmentsService {
         where,
       });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Department with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Department', where, this.logger);
     }
   }
 
@@ -55,11 +56,7 @@ export class DepartmentsService {
     try {
       return await this.prisma.department.delete({ where });
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          this.logger.log(`Department with id(${where.id}) not found`);
-        }
-      }
+      handlePrismaMutationError(e, 'Department', where, this.logger);
     }
   }
 }

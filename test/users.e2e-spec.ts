@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
-import { JwtAuthGuard } from '../src/common/guards/jwt-auth.guard';
+import { applyCommonE2eOverrides, initE2eApp } from './e2e-test-utils';
 import { UsersService } from '../src/users/users.service';
 
 describe('UsersResolver (e2e)', () => {
@@ -23,17 +23,16 @@ describe('UsersResolver (e2e)', () => {
   };
 
   beforeAll(async () => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideProvider(JwtAuthGuard)
-      .useValue({ canActivate: () => true })
+    const moduleRef: TestingModule = await applyCommonE2eOverrides(
+      Test.createTestingModule({
+        imports: [AppModule],
+      }),
+    )
       .overrideProvider(UsersService)
       .useValue(usersService)
       .compile();
 
-    app = moduleRef.createNestApplication();
-    await app.init();
+    app = await initE2eApp(moduleRef);
   });
 
   it('createUser', async () => {
