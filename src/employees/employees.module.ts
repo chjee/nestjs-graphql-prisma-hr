@@ -4,9 +4,11 @@ import { EmployeesResolver } from './employees.resolver';
 import { DepartmentsModule } from '../departments/departments.module';
 import { JobhistoriesModule } from '../jobhistories/jobhistories.module';
 import { JobsModule } from '../jobs/jobs.module';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
+    PrismaModule,
     forwardRef(() => DepartmentsModule),
     forwardRef(() => JobsModule),
     forwardRef(() => JobhistoriesModule),
